@@ -209,7 +209,7 @@ function AdminLeads() {
                       {lead.status || 'new'}
                     </Badge>
                     {lead.followup_at && isBefore(new Date(lead.followup_at), new Date()) && lead.status !== 'completed' && (
-                      <Bell className="h-3 w-3 text-destructive animate-pulse" title="Follow-up Overdue" />
+                      <Bell className="h-3 w-3 text-destructive animate-pulse" />
                     )}
                   </div>
                 </TableCell>
