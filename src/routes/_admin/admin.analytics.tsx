@@ -38,7 +38,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { isWithinInterval, parseISO, startOfDay, endOfDay } from "date-fns";
 
-export const Route = createFileRoute("/_admin/admin/analytics" as any)({
+export const Route = createFileRoute("/_admin/admin/analytics")({
   component: AdminAnalytics,
 });
 

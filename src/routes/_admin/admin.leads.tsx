@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CheckCircle, Clock, Trash2, Mail } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_admin/admin/leads" as any)({
+export const Route = createFileRoute("/_admin/admin/leads")({
   component: AdminLeads,
 });
 
