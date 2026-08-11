@@ -9,17 +9,17 @@ export const submitLead = createServerFn({ method: "POST" })
       message: z.string(),
       service_slug: z.string(),
       tier: z.string(),
-      // source: z.string().optional(),
     }).parse(data)
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // Fetch notification settings
-    const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
+    const { data: settings } = await supabaseAdmin
+      .from("notification_settings")
       .select("value")
       .eq("key", "lead_notifications")
-      .single();
+      .maybeSingle();
 
     const config = (settings?.value as any) || {
       team_emails: ["hello@mariostudio.com"],
@@ -43,11 +43,11 @@ export const submitLead = createServerFn({ method: "POST" })
 export const getNotificationSettings = createServerFn({ method: "GET" })
   .handler(async () => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await (supabaseAdmin
-      .from("notification_settings" as any) as any)
+    const { data } = await supabaseAdmin
+      .from("notification_settings")
       .select("*")
       .eq("key", "lead_notifications")
-      .single();
+      .maybeSingle();
     return data;
   });
 
@@ -59,8 +59,8 @@ export const updateNotificationSettings = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await (supabaseAdmin
-      .from("notification_settings" as any) as any)
+    const { error } = await supabaseAdmin
+      .from("notification_settings")
       .upsert({ key: "lead_notifications", value: data });
     if (error) throw error;
     return { success: true };
@@ -70,7 +70,6 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     service: z.string().optional(),
     tier: z.string().optional(),
-    // source: z.string().optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional()
   }).optional().parse(data))
@@ -80,7 +79,6 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
 
     if (data?.service) query = query.eq("service_slug", data.service);
     if (data?.tier) query = query.eq("tier", data.tier);
-    // if (data?.source) query = (query as any).eq("source", data.source);
     if (data?.startDate) query = query.gte("created_at", data.startDate);
     if (data?.endDate) query = query.lte("created_at", data.endDate);
 
@@ -88,15 +86,13 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
     
     if (!leads || leads.length === 0) return { csv: "No data" };
 
-    const headers = ["Date", "Name", "Email", "Service", "Tier", "Source", "Status"];
+    const headers = ["Date", "Name", "Email", "Service", "Tier", "Status"];
     const rows = leads.map(l => [
       l.created_at,
       l.name,
       l.email,
       l.service_slug,
       l.tier,
-      // (l as any).source || "direct",
-      "direct",
       l.status
     ].join(","));
 
