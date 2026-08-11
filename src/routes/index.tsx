@@ -1,17 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import {
-  Code2,
-  PenTool,
-  Sparkles,
-  LayoutDashboard,
-  Clapperboard,
-  SearchCheck,
-  Wrench,
-  ShieldCheck,
-  Megaphone,
-  ArrowUpRight,
-} from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
+import { services } from "@/lib/services-data";
+import { serviceIcons } from "@/lib/service-icons";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,17 +26,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const services = [
-  { icon: Code2, title: "Web Development", desc: "Fast, scalable sites and web apps built to convert." },
-  { icon: PenTool, title: "Graphic Design", desc: "Print and social assets with a sharp, consistent voice." },
-  { icon: Sparkles, title: "Identity Branding", desc: "Logos, systems and guidelines that hold up everywhere." },
-  { icon: LayoutDashboard, title: "UI/UX Design", desc: "Research-led interfaces people actually enjoy using." },
-  { icon: Clapperboard, title: "Video Editing", desc: "Cuts, motion and sound that keep attention to the end." },
-  { icon: SearchCheck, title: "Brand Audit", desc: "An honest read on where your brand leaks value." },
-  { icon: Wrench, title: "Web Maintenance", desc: "Updates, backups and fixes so nothing quietly breaks." },
-  { icon: ShieldCheck, title: "Web Security", desc: "Hardening, monitoring and recovery plans that work." },
-  { icon: Megaphone, title: "Digital Marketing", desc: "Campaigns measured on pipeline, not impressions." },
-];
 
 const steps = [
   { n: "01", t: "Audit", d: "We map your brand, product and competitors before touching pixels." },
@@ -63,7 +43,7 @@ function Index() {
             <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
           </a>
           <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <a href="#services" className="transition-colors hover:text-brand">Services</a>
+            <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
             <a href="#process" className="transition-colors hover:text-brand">Process</a>
             <a href="#work" className="transition-colors hover:text-brand">Why us</a>
           </nav>
@@ -101,12 +81,12 @@ function Index() {
                 >
                   Get a free brand audit <ArrowUpRight className="h-4 w-4" />
                 </a>
-                <a
-                  href="#services"
+                <Link
+                  to="/services"
                   className="inline-flex items-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold transition-colors hover:border-brand"
                 >
-                  See services
-                </a>
+                  See services &amp; pricing
+                </Link>
               </div>
             </div>
             <div className="relative rounded-3xl border border-border bg-secondary p-10">
@@ -139,18 +119,29 @@ function Index() {
             Nine disciplines that work together — so strategy, design and code never contradict each other.
           </p>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map(({ icon: Icon, title, desc }) => (
-              <article
-                key={title}
-                className="group rounded-2xl border border-border bg-card p-7 transition-colors hover:border-brand"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand-foreground transition-colors group-hover:bg-brand">
-                  <Icon className="h-6 w-6" />
-                </div>
-                <h3 className="mt-5 text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
-              </article>
-            ))}
+            {services.map((s) => {
+              const Icon = serviceIcons[s.icon];
+              return (
+                <Link
+                  key={s.slug}
+                  to="/services/$slug"
+                  params={{ slug: s.slug }}
+                  className="group rounded-2xl border border-border bg-card p-7 transition-colors hover:border-brand"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand-foreground transition-colors group-hover:bg-brand">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-5 flex items-center gap-1 text-lg font-bold">
+                    {s.title}
+                    <ArrowUpRight className="h-4 w-4 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                  <p className="mt-4 text-sm font-bold">
+                    From <span className="text-brand">{s.plans[0]?.price}</span>
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </section>
 
