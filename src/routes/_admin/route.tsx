@@ -53,6 +53,7 @@ function AdminLayout() {
             <AdminNavLink to="/admin/blog" label="Blog Posts" />
             <AdminNavLink to="/admin/work" label="Case Studies" />
             <AdminNavLink to="/admin/roles" label="Roles & Permissions" />
+            <AdminNavLink to="/admin/signup" label="Add New Admin" />
           </nav>
         </aside>
 
