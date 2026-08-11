@@ -64,64 +64,91 @@ export function HeroSlider() {
   const rotate = useTransform(scrollY, [0, 500], [0, 5]);
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-background">
-      {/* Background Parallax Element */}
-      <motion.div 
-        style={{ y: y1 }}
-        className="pointer-events-none absolute -right-40 -top-40 h-[40rem] w-[40rem] rounded-full bg-brand-soft/30 blur-3xl" 
-      />
-      
+    <section className="relative overflow-hidden bg-background">
       <div className="embla overflow-hidden" ref={emblaRef}>
         <div className="embla__container flex">
           {slides.map((slide, index) => (
-            <div key={index} className="embla__slide min-w-0 flex-[0_0_100%]">
-              <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-[1.2fr_0.8fr] md:items-center md:py-32">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={selectedIndex === index ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                >
-                  <span className="inline-flex items-center gap-2 rounded-full border border-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-foreground">
-                    <span className="h-2 w-2 rounded-full bg-brand" />
-                    {slide.tag}
-                  </span>
-                  <h1 className="mt-6 text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-                    {slide.title}
-                    <br />
-                    <span className="text-brand">{slide.subtitle}</span>
-                  </h1>
-                  <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-                    {slide.desc}
-                  </p>
-                  <div className="mt-9 flex flex-wrap gap-3">
-                    <Link
-                      to={slide.ctaLink}
-                      className="inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
-                    >
-                      {slide.cta} <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                    <Link
-                      to="/services"
-                      className="inline-flex items-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold transition-colors hover:border-brand"
-                    >
-                      See all services
-                    </Link>
-                  </div>
-                </motion.div>
-                
+            <div key={index} className="embla__slide min-w-0 flex-[0_0_100%] h-screen min-h-[700px]">
+              <div className="relative h-full w-full overflow-hidden">
+                {/* Magazine Background: Large stylized text or pattern */}
                 <motion.div 
-                  style={{ y: y2, rotate }}
-                  className="relative hidden md:block rounded-3xl border border-border bg-secondary p-10"
+                  initial={{ opacity: 0, scale: 1.1 }}
+                  animate={selectedIndex === index ? { opacity: 0.05, scale: 1 } : { opacity: 0 }}
+                  transition={{ duration: 1.5 }}
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
                 >
-                  <motion.img 
-                    src={slide.image} 
-                    alt={slide.tag} 
-                    className="mx-auto w-full max-w-xs"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={selectedIndex === index ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                  />
+                  <span className="text-[25vw] font-black leading-none text-foreground uppercase tracking-tighter">
+                    {slide.tag.split(' ')[0]}
+                  </span>
                 </motion.div>
+
+                <div className="relative h-full mx-auto max-w-7xl px-6 flex flex-col justify-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+                    
+                    {/* Main Title Section */}
+                    <div className="lg:col-span-8">
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={selectedIndex === index ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                      >
+                        <div className="flex items-center gap-4 mb-8">
+                          <span className="h-[1px] w-12 bg-brand" />
+                          <span className="text-sm font-bold uppercase tracking-[0.3em] text-brand">
+                            {slide.tag}
+                          </span>
+                        </div>
+                        
+                        <h1 className="text-6xl md:text-8xl lg:text-[120px] font-black leading-[0.85] tracking-tighter uppercase italic">
+                          {slide.title}
+                          <br />
+                          <span className="text-brand not-italic">{slide.subtitle}</span>
+                        </h1>
+                      </motion.div>
+                    </div>
+
+                    {/* Description and CTA Column */}
+                    <div className="lg:col-span-4 lg:pb-6">
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={selectedIndex === index ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="space-y-8"
+                      >
+                        <p className="text-xl text-muted-foreground leading-relaxed font-medium border-l-2 border-brand pl-6">
+                          {slide.desc}
+                        </p>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <Link
+                            to={slide.ctaLink}
+                            className="group relative inline-flex items-center justify-between gap-4 bg-brand px-8 py-5 text-sm font-black uppercase tracking-widest text-brand-foreground transition-all hover:pr-10"
+                          >
+                            <span>{slide.cta}</span>
+                            <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                          </Link>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+
+                  {/* Corner Image/Graphic Element */}
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+                    animate={selectedIndex === index ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 0.8, rotate: -10 }}
+                    transition={{ duration: 1, delay: 0.6 }}
+                    className="absolute bottom-20 right-6 hidden xl:block w-48 h-48"
+                  >
+                    <div className="relative group cursor-pointer">
+                      <div className="absolute inset-0 bg-brand rounded-full animate-ping opacity-20 group-hover:opacity-40" />
+                      <img 
+                        src={slide.image} 
+                        alt="Brand Icon" 
+                        className="relative z-10 w-full h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-500" 
+                      />
+                    </div>
+                  </motion.div>
+                </div>
               </div>
             </div>
           ))}
