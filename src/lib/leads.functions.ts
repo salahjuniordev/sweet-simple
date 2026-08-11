@@ -103,13 +103,14 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
     
     if (!leads || leads.length === 0) return { csv: "No data" };
 
-    const headers = ["Date", "Name", "Email", "Service", "Tier", "Status"];
+    const headers = ["Date", "Name", "Email", "Service", "Tier", "Source", "Status"];
     const rows = leads.map(l => [
       l.created_at,
       l.name,
       l.email,
       l.service_slug,
       l.tier,
+      (l as any).source || 'direct',
       l.status
     ].join(","));
 
