@@ -15,6 +15,8 @@ import { caseStudies } from "@/lib/work-data";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { NewsletterForm } from "@/components/newsletter-form";
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 
 import { HeroSlider } from "@/components/hero-slider";
 
