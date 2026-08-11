@@ -34,6 +34,7 @@ import { Route as AdminAdminLeadsRouteImport } from './routes/_admin/admin.leads
 import { Route as AdminAdminRolesRouteImport } from './routes/_admin/admin.roles'
 import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin.services'
 import { Route as AdminAdminSignupRouteImport } from './routes/_admin/admin.signup'
+import { Route as AdminAdminWorkRouteImport } from './routes/_admin/admin.work'
 import { Route as ApiPublicSitemapXmlRouteImport } from './routes/api/public/sitemap.xml'
 
 const IndexRoute = IndexRouteImport.update({
@@ -160,6 +161,11 @@ const AdminAdminSignupRoute = AdminAdminSignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => AdminAdminRoute,
 } as any)
+const AdminAdminWorkRoute = AdminAdminWorkRouteImport.update({
+  id: '/work',
+  path: '/work',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
 const ApiPublicSitemapXmlRoute = ApiPublicSitemapXmlRouteImport.update({
   id: '/api/public/sitemap/xml',
   path: '/api/public/sitemap/xml',
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/admin/signup': typeof AdminAdminSignupRoute
+  '/admin/work': typeof AdminAdminWorkRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRoutesByTo {
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/admin/signup': typeof AdminAdminSignupRoute
+  '/admin/work': typeof AdminAdminWorkRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRoutesById {
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/_admin/admin/roles': typeof AdminAdminRolesRoute
   '/_admin/admin/services': typeof AdminAdminServicesRoute
   '/_admin/admin/signup': typeof AdminAdminSignupRoute
+  '/_admin/admin/work': typeof AdminAdminWorkRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRouteTypes {
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/services'
     | '/admin/signup'
+    | '/admin/work'
     | '/api/public/sitemap/xml'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/admin/roles'
     | '/admin/services'
     | '/admin/signup'
+    | '/admin/work'
     | '/api/public/sitemap/xml'
   id:
     | '__root__'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/roles'
     | '/_admin/admin/services'
     | '/_admin/admin/signup'
+    | '/_admin/admin/work'
     | '/api/public/sitemap/xml'
   fileRoutesById: FileRoutesById
 }
@@ -533,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminSignupRouteImport
       parentRoute: typeof AdminAdminRoute
     }
+    '/_admin/admin/work': {
+      id: '/_admin/admin/work'
+      path: '/work'
+      fullPath: '/admin/work'
+      preLoaderRoute: typeof AdminAdminWorkRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
     '/api/public/sitemap/xml': {
       id: '/api/public/sitemap/xml'
       path: '/api/public/sitemap/xml'
@@ -550,6 +569,7 @@ interface AdminAdminRouteChildren {
   AdminAdminRolesRoute: typeof AdminAdminRolesRoute
   AdminAdminServicesRoute: typeof AdminAdminServicesRoute
   AdminAdminSignupRoute: typeof AdminAdminSignupRoute
+  AdminAdminWorkRoute: typeof AdminAdminWorkRoute
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
@@ -559,6 +579,7 @@ const AdminAdminRouteChildren: AdminAdminRouteChildren = {
   AdminAdminRolesRoute: AdminAdminRolesRoute,
   AdminAdminServicesRoute: AdminAdminServicesRoute,
   AdminAdminSignupRoute: AdminAdminSignupRoute,
+  AdminAdminWorkRoute: AdminAdminWorkRoute,
 }
 
 const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
@@ -601,3 +622,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
