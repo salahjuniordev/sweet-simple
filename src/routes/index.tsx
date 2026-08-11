@@ -180,7 +180,9 @@ function Index() {
                 </li>
               ))}
             </ul>
+          </div>
         </section>
+
 
         <section id="testimonials" className="border-y border-border bg-brand-soft">
           <div className="mx-auto max-w-6xl px-6 py-24">
