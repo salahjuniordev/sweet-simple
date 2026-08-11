@@ -6,7 +6,7 @@ import { z } from "zod";
  * Use this to allow one-time operations like creating the first admin.
  */
 export const validateBootstrapToken = createServerFn({ method: "POST" })
-  .input(z.object({ token: z.string() }))
+  .validator((data: unknown) => z.object({ token: z.string() }).parse(data))
   .handler(async ({ data }) => {
     const bootstrapToken = process.env["ADMIN_BOOTSTRAP_TOKEN"];
     
@@ -27,10 +27,10 @@ export const validateBootstrapToken = createServerFn({ method: "POST" })
  * This bypasses RLS checks and should only be used for the initial setup.
  */
 export const bootstrapAdminUser = createServerFn({ method: "POST" })
-  .input(z.object({ 
+  .validator((data: unknown) => z.object({ 
     token: z.string(),
     userId: z.string().uuid()
-  }))
+  }).parse(data))
   .handler(async ({ data }) => {
     const bootstrapToken = process.env["ADMIN_BOOTSTRAP_TOKEN"];
     
