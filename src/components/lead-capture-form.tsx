@@ -44,30 +44,23 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("lead_submissions").insert({
-        name: values.name,
-        email: values.email,
-        message: values.message,
-        service_slug: serviceSlug,
-        tier: tier,
+      const source = typeof window !== 'undefined' ? 
+        (window.location.search.includes('source=') ? 
+          new URLSearchParams(window.location.search).get('source') : 
+          'direct') : 
+        'direct';
+
+      // Trigger server function (handles DB insert and notifications)
+      await submitLead({
+        data: {
+          name: values.name,
+          email: values.email,
+          message: values.message,
+          service_slug: serviceSlug,
+          tier: tier,
+          source: source || 'direct'
+        }
       });
-
-      if (error) throw error;
-
-      // Trigger simulated notifications
-      try {
-        await submitLead({
-          data: {
-            name: values.name,
-            email: values.email,
-            message: values.message,
-            service_slug: serviceSlug,
-            tier: tier,
-          }
-        });
-      } catch (e) {
-        console.error("Notification trigger failed", e);
-      }
 
       toast.success("Inquiry sent! We'll be in touch soon.");
       form.reset();
