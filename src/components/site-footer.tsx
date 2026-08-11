@@ -7,7 +7,7 @@ import {
   MessageCircle,
   LucideIcon
 } from "lucide-react";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
+
 import { services } from "@/lib/services-data";
 
 // Fallbacks for missing icons
@@ -30,7 +30,7 @@ export function SiteFooter() {
         <div className="grid gap-12 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
             <Link to="/" className="inline-block transition-opacity hover:opacity-80">
-              <img src={logo.url} alt="Mario Studio" className="h-[90px] w-auto" />
+              <img src="/logo.png" alt="Mario Studio" className="h-[90px] w-auto" />
             </Link>
             <p className="mt-5 max-w-xs text-sm text-muted-foreground">
               A full-service digital studio: identity, design, development, video and marketing —
