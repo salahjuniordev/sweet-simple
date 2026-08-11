@@ -61,6 +61,7 @@ function AdminLayout() {
           <nav className="space-y-1">
             <AdminNavLink to="/admin" label="Dashboard" />
             <AdminNavLink to="/admin/services" label="Services" />
+            <AdminNavLink to="/admin/analytics" label="Analytics" />
             <AdminNavLink to="/admin/leads" label="Leads & Inquiries" />
             <AdminNavLink to="/admin/blog" label="Blog Posts" />
             <AdminNavLink to="/admin/work" label="Case Studies" />

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { submitLead } from "@/lib/leads.functions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -49,9 +50,26 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
         message: values.message,
         service_slug: serviceSlug,
         tier: tier,
-      });
+        source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
+      } as any);
 
       if (error) throw error;
+
+      // Trigger simulated notifications
+      try {
+        await (submitLead as any)({
+          data: {
+            name: values.name,
+            email: values.email,
+            message: values.message,
+            service_slug: serviceSlug,
+            tier: tier,
+            source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
+          }
+        });
+      } catch (e) {
+        console.error("Notification trigger failed", e);
+      }
 
       toast.success("Inquiry sent! We'll be in touch soon.");
       form.reset();
