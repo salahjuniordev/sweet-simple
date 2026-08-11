@@ -50,10 +50,10 @@ function PricingPage() {
           <div className="mx-auto max-w-6xl px-6 py-20">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Pricing</p>
             <h1 className="mt-4 max-w-3xl text-5xl font-black tracking-tight md:text-6xl">
-              Every service, every tier, <span className="text-brand">one table</span>
+              Web development <span className="text-brand">pricing</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-              Prices are real starting points, not "contact us". Anything custom gets a fixed quote
+              Prices for our web development tiers. Anything custom gets a fixed quote
               after a free 30-minute scoping call.
             </p>
           </div>
@@ -73,7 +73,7 @@ function PricingPage() {
                 </tr>
               </thead>
               <tbody>
-                {services.map((s) => {
+                {services.filter(s => s.slug === 'web-development').map((s) => {
                   const [a, b, c] = s.plans;
                   return (
                     <tr key={s.slug} className="border-t border-border align-top">

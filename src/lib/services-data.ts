@@ -36,9 +36,9 @@ export const services: Service[] = [
     ],
     deliverables: ["Responsive build", "CMS integration", "Performance report", "30 days post-launch support"],
     plans: [
-      { name: "Landing", price: "$900", note: "one-off", features: ["1 page", "Contact form", "Basic SEO", "2 revisions"] },
-      { name: "Business Site", price: "$2,400", note: "one-off", features: ["Up to 8 pages", "CMS", "SEO setup", "Speed optimisation"], featured: true },
-      { name: "Custom App", price: "from $6,000", note: "project", features: ["Custom features", "Database & auth", "Integrations", "Dedicated PM"] },
+      { name: "Basic", price: "$900", note: "one-off", features: ["1 page", "Contact form", "Basic SEO", "2 revisions"] },
+      { name: "Starter", price: "$2,400", note: "one-off", features: ["Up to 8 pages", "CMS", "SEO setup", "Speed optimisation"], featured: true },
+      { name: "Premium", price: "from $6,000", note: "project", features: ["Custom features", "Database & auth", "Integrations", "Dedicated PM"] },
     ],
   },
   {
