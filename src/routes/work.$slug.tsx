@@ -2,14 +2,18 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Check, Quote } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getCaseStudy, caseStudies, type CaseStudy } from "@/lib/work-data";
-import { getService } from "@/lib/services-data";
+import { getCaseStudyBySlug, getCaseStudies, getServiceBySlug } from "@/lib/cms-queries";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/work/$slug")({
-  loader: ({ params }) => {
-    const study = getCaseStudy(params.slug);
-    if (!study) throw notFound();
-    return { study };
+  loader: async ({ params }) => {
+    try {
+      const study = await getCaseStudyBySlug(params.slug);
+      if (!study) throw notFound();
+      return { study };
+    } catch (e) {
+      throw notFound();
+    }
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -50,8 +54,14 @@ function CaseNotFound() {
 }
 
 function CaseStudyPage() {
-  const { study } = Route.useLoaderData() as { study: CaseStudy };
-  const more = caseStudies.filter((c) => c.slug !== study.slug).slice(0, 3);
+  const { study } = Route.useLoaderData() as any;
+
+  const { data: allWork } = useQuery({
+    queryKey: ["case-studies"],
+    queryFn: getCaseStudies,
+  });
+
+  const more = allWork?.filter((c) => c.slug !== study.slug).slice(0, 3) || [];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -71,27 +81,16 @@ function CaseStudyPage() {
             <h1 className="mt-5 text-4xl font-black tracking-tight md:text-5xl">{study.title}</h1>
             <p className="mt-5 text-lg text-muted-foreground">{study.summary}</p>
             <div className="mt-8 flex flex-wrap gap-2">
-              {study.serviceSlugs.map((slug) => {
-                const service = getService(slug);
-                if (!service) return null;
-                return (
-                  <Link
-                    key={slug}
-                    to="/services/$slug"
-                    params={{ slug }}
-                    className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold transition-colors hover:border-brand hover:text-brand"
-                  >
-                    {service.title}
-                  </Link>
-                );
-              })}
+              {(study.service_slugs as string[]).map((slug) => (
+                <ServiceLink key={slug} slug={slug} />
+              ))}
             </div>
           </div>
         </section>
 
         <section className="border-b border-border bg-primary text-primary-foreground">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
-            {study.results.map((r) => (
+            {(study.results as any[]).map((r) => (
               <div key={r.label}>
                 <div className="text-3xl font-black text-brand md:text-4xl">{r.value}</div>
                 <div className="mt-1 text-sm opacity-80">{r.label}</div>
@@ -106,7 +105,7 @@ function CaseStudyPage() {
 
           <h2 className="mt-14 text-3xl font-black tracking-tight">What we did</h2>
           <ul className="mt-6 space-y-4">
-            {study.approach.map((a) => (
+            {(study.approach as string[]).map((a) => (
               <li key={a} className="flex gap-3">
                 <Check className="mt-1 h-5 w-5 shrink-0 text-brand" />
                 <span className="text-muted-foreground">{a}</span>
@@ -117,9 +116,9 @@ function CaseStudyPage() {
           {study.quote && (
             <figure className="mt-14 rounded-3xl border border-border bg-brand-soft p-8">
               <Quote className="h-7 w-7 text-brand" />
-              <blockquote className="mt-4 text-lg leading-relaxed">"{study.quote.text}"</blockquote>
+              <blockquote className="mt-4 text-lg leading-relaxed">"{(study.quote as any).text}"</blockquote>
               <figcaption className="mt-5 text-sm font-semibold">
-                {study.quote.name} — <span className="text-muted-foreground">{study.quote.role}</span>
+                {(study.quote as any).name} — <span className="text-muted-foreground">{(study.quote as any).role}</span>
               </figcaption>
             </figure>
           )}
@@ -160,5 +159,24 @@ function CaseStudyPage() {
 
       <SiteFooter />
     </div>
+  );
+}
+
+function ServiceLink({ slug }: { slug: string }) {
+  const { data: service } = useQuery({
+    queryKey: ["service", slug],
+    queryFn: () => getServiceBySlug(slug),
+  });
+
+  if (!service) return null;
+
+  return (
+    <Link
+      to="/services/$slug"
+      params={{ slug }}
+      className="rounded-full border border-border px-4 py-1.5 text-xs font-semibold transition-colors hover:border-brand hover:text-brand"
+    >
+      {service.title}
+    </Link>
   );
 }
