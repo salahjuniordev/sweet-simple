@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check, Sparkles } from "lucide-react";
 import { getServiceBySlug, getServices } from "@/lib/cms-queries";
 import { serviceIcons } from "@/lib/service-icons";
 import {
@@ -14,6 +14,8 @@ import { serviceFaqs } from "@/lib/service-faqs";
 import { caseStudyForService } from "@/lib/work-data";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { LeadCaptureForm } from "@/components/lead-capture-form";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: async ({ params }) => {
@@ -34,6 +36,8 @@ export const Route = createFileRoute("/services/$slug")({
     const { service } = loaderData;
     const title = `${service.title} — Digital Services | Mario Studio`;
     const description = `${service.tagline}. ${service.desc_short} Expert ${service.title.toLowerCase()} starting from ${(service.plans as any)?.[0]?.price ?? "$0"}.`;
+    const faqItems = serviceFaqs[service.slug as keyof typeof serviceFaqs] ?? [];
+
     return {
       meta: [
         { title },
@@ -42,23 +46,40 @@ export const Route = createFileRoute("/services/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: `https://mariostudio.com/services/${service.slug}` },
+        { property: "og:image", content: `https://mariostudio.com/og-service-${service.slug}.png` },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: `https://mariostudio.com/og-service-${service.slug}.png` },
         {
-          "script:ld+json": {
-            "@context": "https://schema.org",
-            "@type": "Service",
-            name: service.title,
-            description: service.desc_short,
-            provider: {
-              "@type": "Organization",
-              name: "Mario Studio"
+          "script:ld+json": [
+            {
+              "@context": "https://schema.org",
+              "@type": "Service",
+              name: service.title,
+              description: service.desc_short,
+              provider: {
+                "@type": "Organization",
+                name: "Mario Studio",
+                url: "https://mariostudio.com"
+              },
+              offers: {
+                "@type": "AggregateOffer",
+                lowPrice: (service.plans as any)?.[0]?.price.replace(/[^0-9.]/g, '') || "0",
+                priceCurrency: "USD"
+              }
             },
-            offers: {
-              "@type": "AggregateOffer",
-              lowPrice: (service.plans as any)?.[0]?.price.replace(/[^0-9.]/g, '') || "0",
-              priceCurrency: "USD"
-            }
-          }
+            faqItems.length > 0 ? {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqItems.map(f => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: f.a
+                }
+              }))
+            } : null
+          ].filter(Boolean)
         }
       ],
     };
@@ -83,6 +104,7 @@ function ServiceNotFound() {
 function ServiceDetail() {
   const { service } = Route.useLoaderData() as any;
   const Icon = serviceIcons[service.icon as keyof typeof serviceIcons];
+  const [selectedTier, setSelectedTier] = useState<string>((service.plans as any[])?.[0]?.name || "Basic");
   
   const { data: allServices } = useQuery({
     queryKey: ["services"],
@@ -92,6 +114,8 @@ function ServiceDetail() {
   const others = allServices?.filter((s) => s.slug !== service.slug).slice(0, 4) || [];
   const faqItems = serviceFaqs[service.slug as keyof typeof serviceFaqs] ?? [];
   const relatedCase = caseStudyForService(service.slug);
+  
+  const currentPlan = (service.plans as any[]).find(p => p.name === selectedTier) || (service.plans as any[])[0];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -149,49 +173,76 @@ function ServiceDetail() {
 
         <section id="pricing" className="border-y border-border bg-secondary">
           <div className="mx-auto max-w-6xl px-6 py-20">
-            <h2 className="text-4xl font-black tracking-tight">Pricing</h2>
-            <p className="mt-3 max-w-xl text-muted-foreground">
-              Fixed scopes, no surprise invoices. Anything outside a package is quoted up front.
-            </p>
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {(service.plans as any[]).map((p, idx) => (
-                <ScrollReveal key={p.name} direction="up" delay={idx * 0.1}>
-                  <div
-                    className={`flex flex-col h-full rounded-2xl border bg-card p-8 ${
-                      p.featured ? "border-brand ring-2 ring-brand" : "border-border"
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div>
+                <h2 className="text-4xl font-black tracking-tight">Pricing & <span className="text-brand">Scope</span></h2>
+                <p className="mt-3 max-w-xl text-muted-foreground">
+                  Select a tier to view estimated deliverables and get an instant quote request.
+                </p>
+              </div>
+              
+              <div className="flex gap-1 p-1 bg-background border border-border rounded-full self-start">
+                {(service.plans as any[]).map((p) => (
+                  <button
+                    key={p.name}
+                    onClick={() => setSelectedTier(p.name)}
+                    className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
+                      selectedTier === p.name 
+                        ? "bg-brand text-brand-foreground shadow-sm" 
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {p.featured && (
-                      <span className="mb-4 self-start rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-foreground">
-                        Most popular
-                      </span>
-                    )}
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <div className="mt-3 flex items-baseline gap-2">
-                      <span className="text-4xl font-black">{p.price}</span>
-                      <span className="text-sm text-muted-foreground">{p.note}</span>
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_400px]">
+              <ScrollReveal direction="left">
+                <div className="space-y-8">
+                  <div className="rounded-3xl border border-border bg-card p-8 md:p-12">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="h-12 w-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center">
+                        <Sparkles className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold">{currentPlan.name} Package</h3>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-3xl font-black">{currentPlan.price}</span>
+                          <span className="text-sm text-muted-foreground">{currentPlan.note}</span>
+                        </div>
+                      </div>
                     </div>
-                    <ul className="mt-6 flex-1 space-y-3 text-sm">
-                      {p.features.map((f: string) => (
-                        <li key={f} className="flex gap-2">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <a
-                      href="#quote"
-                      className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition-colors ${
-                        p.featured
-                          ? "bg-brand text-brand-foreground"
-                          : "border border-border hover:border-brand"
-                      }`}
-                    >
-                      Choose {p.name}
-                    </a>
+
+                    <div className="grid gap-8 md:grid-cols-2">
+                      <div>
+                        <h4 className="text-sm font-bold uppercase tracking-widest text-brand mb-4">Features</h4>
+                        <ul className="space-y-3">
+                          {currentPlan.features.map((f: string) => (
+                            <li key={f} className="flex gap-3 text-sm">
+                              <Check className="h-4 w-4 shrink-0 text-brand mt-0.5" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold uppercase tracking-widest text-brand mb-4">Estimated Scope</h4>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          This tier is designed for {currentPlan.name.toLowerCase()} requirements. 
+                          Includes complete {service.title.toLowerCase()} strategy, asset creation, and 
+                          {currentPlan.features.length} core deliverables optimized for conversion.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </ScrollReveal>
-              ))}
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="right">
+                <LeadCaptureForm serviceSlug={service.slug} tier={selectedTier} />
+              </ScrollReveal>
             </div>
           </div>
         </section>
