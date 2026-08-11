@@ -121,6 +121,7 @@ export type Database = {
           intro: string
           plans: Json
           slug: string
+          sort_order: number | null
           tagline: string
           title: string
           updated_at: string | null
@@ -135,6 +136,7 @@ export type Database = {
           intro: string
           plans?: Json
           slug: string
+          sort_order?: number | null
           tagline: string
           title: string
           updated_at?: string | null
@@ -149,6 +151,7 @@ export type Database = {
           intro?: string
           plans?: Json
           slug?: string
+          sort_order?: number | null
           tagline?: string
           title?: string
           updated_at?: string | null

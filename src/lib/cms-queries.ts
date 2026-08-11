@@ -4,7 +4,7 @@ export const getServices = async () => {
   const { data, error } = await supabase
     .from("cms_services")
     .select("*")
-    .order("title");
+    .order("sort_order", { ascending: true });
   
   if (error) throw error;
   return data;
