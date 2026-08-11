@@ -9,6 +9,7 @@ export const submitLead = createServerFn({ method: "POST" })
       message: z.string(),
       service_slug: z.string(),
       tier: z.string(),
+      source: z.string().optional(),
     }).parse(data)
   )
   .handler(async ({ data }) => {
