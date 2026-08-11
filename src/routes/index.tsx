@@ -41,7 +41,7 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Mario Studio",
           url: "https://mariostudio.com",
-          logo: "https://mariostudio.com/favicon.png",
+          logo: "https://mariostudio.com/logo.png",
           description: "Full-service digital studio specializing in brand design and web development.",
           sameAs: [
             "https://twitter.com/mariostudio",
