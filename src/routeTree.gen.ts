@@ -21,7 +21,6 @@ import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
@@ -31,6 +30,7 @@ import { Route as WorkSlugRouteImport } from './routes/work.$slug'
 import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
 import { Route as AdminAdminRolesRouteImport } from './routes/_admin/admin.roles'
 import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin.services'
+import { Route as AdminAdminSignupRouteImport } from './routes/_admin/admin.signup'
 import { Route as ApiPublicSitemapXmlRouteImport } from './routes/api/public/sitemap.xml'
 
 const IndexRoute = IndexRouteImport.update({
@@ -92,11 +92,6 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/auth/signup',
-  path: '/auth/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -142,6 +137,11 @@ const AdminAdminServicesRoute = AdminAdminServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AdminAdminRoute,
 } as any)
+const AdminAdminSignupRoute = AdminAdminSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
 const ApiPublicSitemapXmlRoute = ApiPublicSitemapXmlRouteImport.update({
   id: '/api/public/sitemap/xml',
   path: '/api/public/sitemap/xml',
@@ -160,7 +160,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminAdminRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
@@ -170,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminAdminBlogRoute
   '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
+  '/admin/signup': typeof AdminAdminSignupRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRoutesByTo {
@@ -184,7 +184,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminAdminRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
@@ -194,6 +193,7 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminAdminBlogRoute
   '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
+  '/admin/signup': typeof AdminAdminSignupRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRoutesById {
@@ -210,7 +210,6 @@ export interface FileRoutesById {
   '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
   '/work/$slug': typeof WorkSlugRoute
@@ -220,6 +219,7 @@ export interface FileRoutesById {
   '/_admin/admin/blog': typeof AdminAdminBlogRoute
   '/_admin/admin/roles': typeof AdminAdminRolesRoute
   '/_admin/admin/services': typeof AdminAdminServicesRoute
+  '/_admin/admin/signup': typeof AdminAdminSignupRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
 export interface FileRouteTypes {
@@ -236,7 +236,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth/callback'
     | '/auth/login'
-    | '/auth/signup'
     | '/blog/$slug'
     | '/services/$slug'
     | '/work/$slug'
@@ -246,6 +245,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/roles'
     | '/admin/services'
+    | '/admin/signup'
     | '/api/public/sitemap/xml'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -260,7 +260,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth/callback'
     | '/auth/login'
-    | '/auth/signup'
     | '/blog/$slug'
     | '/services/$slug'
     | '/work/$slug'
@@ -270,6 +269,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/roles'
     | '/admin/services'
+    | '/admin/signup'
     | '/api/public/sitemap/xml'
   id:
     | '__root__'
@@ -285,7 +285,6 @@ export interface FileRouteTypes {
     | '/_admin/admin'
     | '/auth/callback'
     | '/auth/login'
-    | '/auth/signup'
     | '/blog/$slug'
     | '/services/$slug'
     | '/work/$slug'
@@ -295,6 +294,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/blog'
     | '/_admin/admin/roles'
     | '/_admin/admin/services'
+    | '/_admin/admin/signup'
     | '/api/public/sitemap/xml'
   fileRoutesById: FileRoutesById
 }
@@ -310,7 +310,6 @@ export interface RootRouteChildren {
   ThankYouRoute: typeof ThankYouRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthSignupRoute: typeof AuthSignupRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
   WorkSlugRoute: typeof WorkSlugRoute
@@ -406,13 +405,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/auth/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -476,6 +468,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminServicesRouteImport
       parentRoute: typeof AdminAdminRoute
     }
+    '/_admin/admin/signup': {
+      id: '/_admin/admin/signup'
+      path: '/signup'
+      fullPath: '/admin/signup'
+      preLoaderRoute: typeof AdminAdminSignupRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
     '/api/public/sitemap/xml': {
       id: '/api/public/sitemap/xml'
       path: '/api/public/sitemap/xml'
@@ -490,12 +489,14 @@ interface AdminAdminRouteChildren {
   AdminAdminBlogRoute: typeof AdminAdminBlogRoute
   AdminAdminRolesRoute: typeof AdminAdminRolesRoute
   AdminAdminServicesRoute: typeof AdminAdminServicesRoute
+  AdminAdminSignupRoute: typeof AdminAdminSignupRoute
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
   AdminAdminBlogRoute: AdminAdminBlogRoute,
   AdminAdminRolesRoute: AdminAdminRolesRoute,
   AdminAdminServicesRoute: AdminAdminServicesRoute,
+  AdminAdminSignupRoute: AdminAdminSignupRoute,
 }
 
 const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
@@ -526,7 +527,6 @@ const rootRouteChildren: RootRouteChildren = {
   ThankYouRoute: ThankYouRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthLoginRoute: AuthLoginRoute,
-  AuthSignupRoute: AuthSignupRoute,
   BlogSlugRoute: BlogSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
   WorkSlugRoute: WorkSlugRoute,
@@ -538,3 +538,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
