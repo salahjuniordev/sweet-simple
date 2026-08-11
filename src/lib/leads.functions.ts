@@ -15,6 +15,23 @@ export const submitLead = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
+    // Save to database
+    const { error: dbError } = await supabaseAdmin
+      .from("lead_submissions")
+      .insert({
+        name: data.name,
+        email: data.email,
+        message: data.message,
+        service_slug: data.service_slug,
+        tier: data.tier,
+        source: data.source || 'direct'
+      } as any);
+
+    if (dbError) {
+      console.error("Error saving lead to database:", dbError);
+      throw dbError;
+    }
+
     // Fetch notification settings
     const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
       .select("value")
