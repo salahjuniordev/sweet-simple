@@ -294,20 +294,20 @@ function ServiceDetail() {
           </section>
         )}
 
-        <section id="quote" className="bg-primary text-primary-foreground">
-          <div className="mx-auto max-w-4xl px-6 py-20 text-center">
+        <section className="bg-primary text-primary-foreground">
+          <div className="mx-auto max-w-4xl px-6 py-24 text-center">
             <h2 className="text-4xl font-black tracking-tight md:text-5xl">
-              Ready to start your <span className="text-brand">{service.title.toLowerCase()}</span> project?
+              Don't see exactly <span className="text-brand">what you need?</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl opacity-80">
-              Send us a short brief and we'll reply within 48 hours with a scope and fixed price.
+              We offer custom retainers and project-based pricing for complex requirements. 
+              Let's hop on a call and build a custom package for you.
             </p>
             <Link
               to="/contact"
-
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
+              className="mt-10 inline-flex items-center gap-2 rounded-full bg-brand px-10 py-5 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
             >
-              Request a quote <ArrowUpRight className="h-4 w-4" />
+              Book a Strategy Call <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
         </section>
