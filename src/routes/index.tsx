@@ -13,7 +13,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { HeroSlider } from "@/components/hero-slider";
+import { HeroBento } from "@/components/hero-bento";
 import { useQuery } from "@tanstack/react-query";
 import { getServices, getPosts, getCaseStudies } from "@/lib/cms-queries";
 
@@ -84,7 +84,7 @@ function Index() {
       <SiteHeader />
 
       <main id="top">
-        <HeroSlider />
+        <HeroBento />
 
         <section className="border-b border-border bg-primary text-primary-foreground">
           <ScrollReveal direction="up">
