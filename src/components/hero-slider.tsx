@@ -4,7 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
+const logoUrl = "/logo.png";
 
 const slides = [
   {
@@ -14,7 +14,7 @@ const slides = [
     desc: "Mario Studio is a full-service digital partner: identity, design, development, video and marketing — delivered by one team.",
     cta: "Get a free brand audit",
     ctaLink: "/contact",
-    image: logo.url,
+    image: logoUrl,
   },
   {
     tag: "UI/UX Design",
@@ -23,7 +23,7 @@ const slides = [
     desc: "We build user experiences that don't just look good, they perform. From SaaS platforms to e-commerce storefronts.",
     cta: "View our process",
     ctaLink: "/services/ui-ux-design",
-    image: logo.url,
+    image: logoUrl,
   },
   {
     tag: "Identity Branding",
@@ -32,7 +32,7 @@ const slides = [
     desc: "Visual identities built to scale. We don't just make logos; we create systems that grow with your business.",
     cta: "Start your brand",
     ctaLink: "/services/identity-branding",
-    image: logo.url,
+    image: logoUrl,
   },
 ];
 

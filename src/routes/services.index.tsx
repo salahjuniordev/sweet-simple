@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getServices } from "@/lib/cms-queries";
 import { serviceIcons } from "@/lib/service-icons";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
+
 
 export const Route = createFileRoute("/services/")({
   head: () => ({
@@ -53,7 +53,7 @@ function ServicesIndex() {
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <Link to="/">
-            <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
+            <img src="/logo.png" alt="Mario Studio logo" className="h-10 w-auto" />
           </Link>
           <Link
             to="/"

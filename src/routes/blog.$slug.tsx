@@ -52,7 +52,7 @@ export const Route = createFileRoute("/blog/$slug")({
               name: "Mario Studio",
               logo: {
                 "@type": "ImageObject",
-                url: "https://mariostudio.com/favicon.png"
+                url: "https://mariostudio.com/logo.png"
               }
             }
           }
