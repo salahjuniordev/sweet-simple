@@ -141,7 +141,7 @@ function AdminAnalytics() {
                   dataKey="value"
                 >
                   {tierData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length] || "#c5ff33"} />
                   ))}
                 </Pie>
                 <RechartsTooltip />

@@ -51,13 +51,13 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
         service_slug: serviceSlug,
         tier: tier,
         source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
-      });
+      } as any);
 
       if (error) throw error;
 
       // Trigger simulated notifications
       try {
-        await submitLead({
+        await (submitLead as any)({
           data: {
             name: values.name,
             email: values.email,
