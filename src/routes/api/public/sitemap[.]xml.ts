@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const BASE_URL = "https://mariostudio.com";
 
-export const Route = createFileRoute("/api/public/sitemap/xml")({
+export const Route = createFileRoute("/api/public/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {

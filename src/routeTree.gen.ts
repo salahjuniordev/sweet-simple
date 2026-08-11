@@ -35,7 +35,7 @@ import { Route as AdminAdminRolesRouteImport } from './routes/_admin/admin.roles
 import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin.services'
 import { Route as AdminAdminSignupRouteImport } from './routes/_admin/admin.signup'
 import { Route as AdminAdminWorkRouteImport } from './routes/_admin/admin.work'
-import { Route as ApiPublicSitemapXmlRouteImport } from './routes/api/public/sitemap.xml'
+import { Route as ApiPublicSitemapDotxmlRouteImport } from './routes/api/public/sitemap[.]xml'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -166,9 +166,9 @@ const AdminAdminWorkRoute = AdminAdminWorkRouteImport.update({
   path: '/work',
   getParentRoute: () => AdminAdminRoute,
 } as any)
-const ApiPublicSitemapXmlRoute = ApiPublicSitemapXmlRouteImport.update({
-  id: '/api/public/sitemap/xml',
-  path: '/api/public/sitemap/xml',
+const ApiPublicSitemapDotxmlRoute = ApiPublicSitemapDotxmlRouteImport.update({
+  id: '/api/public/sitemap.xml',
+  path: '/api/public/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -198,7 +198,7 @@ export interface FileRoutesByFullPath {
   '/admin/services': typeof AdminAdminServicesRoute
   '/admin/signup': typeof AdminAdminSignupRoute
   '/admin/work': typeof AdminAdminWorkRoute
-  '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
+  '/api/public/sitemap.xml': typeof ApiPublicSitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -226,7 +226,7 @@ export interface FileRoutesByTo {
   '/admin/services': typeof AdminAdminServicesRoute
   '/admin/signup': typeof AdminAdminSignupRoute
   '/admin/work': typeof AdminAdminWorkRoute
-  '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
+  '/api/public/sitemap.xml': typeof ApiPublicSitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -256,7 +256,7 @@ export interface FileRoutesById {
   '/_admin/admin/services': typeof AdminAdminServicesRoute
   '/_admin/admin/signup': typeof AdminAdminSignupRoute
   '/_admin/admin/work': typeof AdminAdminWorkRoute
-  '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
+  '/api/public/sitemap.xml': typeof ApiPublicSitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -286,7 +286,7 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/signup'
     | '/admin/work'
-    | '/api/public/sitemap/xml'
+    | '/api/public/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -314,7 +314,7 @@ export interface FileRouteTypes {
     | '/admin/services'
     | '/admin/signup'
     | '/admin/work'
-    | '/api/public/sitemap/xml'
+    | '/api/public/sitemap.xml'
   id:
     | '__root__'
     | '/'
@@ -343,7 +343,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/services'
     | '/_admin/admin/signup'
     | '/_admin/admin/work'
-    | '/api/public/sitemap/xml'
+    | '/api/public/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -365,7 +365,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   WorkIndexRoute: typeof WorkIndexRoute
-  ApiPublicSitemapXmlRoute: typeof ApiPublicSitemapXmlRoute
+  ApiPublicSitemapDotxmlRoute: typeof ApiPublicSitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -552,11 +552,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminWorkRouteImport
       parentRoute: typeof AdminAdminRoute
     }
-    '/api/public/sitemap/xml': {
-      id: '/api/public/sitemap/xml'
-      path: '/api/public/sitemap/xml'
-      fullPath: '/api/public/sitemap/xml'
-      preLoaderRoute: typeof ApiPublicSitemapXmlRouteImport
+    '/api/public/sitemap.xml': {
+      id: '/api/public/sitemap.xml'
+      path: '/api/public/sitemap.xml'
+      fullPath: '/api/public/sitemap.xml'
+      preLoaderRoute: typeof ApiPublicSitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -617,7 +617,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   WorkIndexRoute: WorkIndexRoute,
-  ApiPublicSitemapXmlRoute: ApiPublicSitemapXmlRoute,
+  ApiPublicSitemapDotxmlRoute: ApiPublicSitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

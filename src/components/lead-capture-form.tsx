@@ -66,6 +66,16 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
         }
       });
 
+      // Analytics Tracking
+      if (typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', 'generate_lead', {
+          'service': serviceSlug,
+          'tier': tier,
+          'source': source || 'direct'
+        });
+      }
+      console.log(`[Analytics] Lead captured: ${serviceSlug} - ${tier}`);
+
       toast.success("Inquiry sent! We'll be in touch soon.");
       form.reset();
     } catch (error: any) {
