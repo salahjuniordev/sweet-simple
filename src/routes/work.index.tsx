@@ -7,15 +7,16 @@ import { caseStudies } from "@/lib/work-data";
 export const Route = createFileRoute("/work/")({
   head: () => ({
     meta: [
-      { title: "Our Work — Case Studies | Mario Studio" },
+      { title: "Portfolio — Digital Design & Development Case Studies | Mario Studio" },
       {
         name: "description",
         content:
-          "Case studies from Mario Studio: rebrands, site rebuilds, packaging systems, video pipelines and security retainers, with the numbers behind each one.",
+          "Browse our portfolio of rebrands, website builds, and video production pipelines. Measurable results for every project.",
       },
       { property: "og:title", content: "Our Work — Case Studies | Mario Studio" },
       { property: "og:description", content: "Selected projects and the measurable results they produced." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/work" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

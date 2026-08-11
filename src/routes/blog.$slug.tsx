@@ -18,14 +18,39 @@ export const Route = createFileRoute("/blog/$slug")({
       };
     }
     const { post } = loaderData;
+    const author = getAuthor(post.category);
     return {
       meta: [
-        { title: `${post.title} | Mario Studio` },
+        { title: `${post.title} | Mario Studio Blog` },
         { name: "description", content: post.excerpt },
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.excerpt },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: `https://mariostudio.com/blog/${post.slug}` },
+        { property: "article:published_time", content: post.date },
+        { property: "article:author", content: author.name },
         { name: "twitter:card", content: "summary_large_image" },
+        {
+          "script:ld+json": {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt,
+            datePublished: post.date,
+            author: {
+              "@type": "Person",
+              name: author.name
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "Mario Studio",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://mariostudio.com/favicon.png"
+              }
+            }
+          }
+        }
       ],
     };
   },

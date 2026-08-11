@@ -16,7 +16,7 @@ export const Route = createFileRoute("/work/$slug")({
       return { meta: [{ title: "Case study not found — Mario Studio" }, { name: "robots", content: "noindex" }] };
     }
     const { study } = loaderData;
-    const title = `${study.client}: ${study.title} | Mario Studio`;
+    const title = `${study.client} Case Study: ${study.title} | Mario Studio`;
     return {
       meta: [
         { title },
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/work/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: study.summary },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: `https://mariostudio.com/work/${study.slug}` },
         { name: "twitter:card", content: "summary_large_image" },
       ],
     };

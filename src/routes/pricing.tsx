@@ -14,11 +14,11 @@ import { faqs } from "@/lib/site-content";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Pricing — Compare All Services | Mario Studio" },
+      { title: "Pricing — Transparent Tiers for Design & Development | Mario Studio" },
       {
         name: "description",
         content:
-          "Compare pricing across all nine Mario Studio services in one table: entry, most popular and custom tiers, with what is included at each level.",
+          "Explore transparent pricing for all nine Mario Studio services. From landing pages to full product design and managed security retainers.",
       },
       { property: "og:title", content: "Pricing — Compare All Services | Mario Studio" },
       {
@@ -26,6 +26,7 @@ export const Route = createFileRoute("/pricing")({
         content: "Transparent tiers for branding, development, design, video, security and marketing.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/pricing" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
