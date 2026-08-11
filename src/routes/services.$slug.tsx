@@ -37,6 +37,8 @@ export const Route = createFileRoute("/services/$slug")({
     const title = `${service.title} — Digital Services | Mario Studio`;
     const description = `${service.tagline}. ${service.desc_short} Expert ${service.title.toLowerCase()} starting from ${(service.plans as any)?.[0]?.price ?? "$0"}.`;
     const faqItems = serviceFaqs[service.slug as keyof typeof serviceFaqs] ?? [];
+    const absoluteUrl = `https://mariostudio.com/services/${service.slug}`;
+    const imageUrl = `https://mariostudio.com/logo.png`; // Using the static logo as default OG image
 
     return {
       meta: [
@@ -45,10 +47,12 @@ export const Route = createFileRoute("/services/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
-        { property: "og:url", content: `https://mariostudio.com/services/${service.slug}` },
-        { property: "og:image", content: `https://mariostudio.com/og-service-${service.slug}.png` },
+        { property: "og:url", content: absoluteUrl },
+        { property: "og:image", content: imageUrl },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: `https://mariostudio.com/og-service-${service.slug}.png` },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: imageUrl },
         {
           "script:ld+json": [
             {
@@ -59,12 +63,14 @@ export const Route = createFileRoute("/services/$slug")({
               provider: {
                 "@type": "Organization",
                 name: "Mario Studio",
-                url: "https://mariostudio.com"
+                url: "https://mariostudio.com",
+                logo: imageUrl
               },
               offers: {
                 "@type": "AggregateOffer",
                 lowPrice: (service.plans as any)?.[0]?.price.replace(/[^0-9.]/g, '') || "0",
-                priceCurrency: "USD"
+                priceCurrency: "USD",
+                offerCount: (service.plans as any)?.length || 0
               }
             },
             faqItems.length > 0 ? {

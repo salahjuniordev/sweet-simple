@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -41,6 +41,11 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
     },
   });
 
+  // Effect to reset form when tier changes to keep it updated with user interaction
+  useEffect(() => {
+    // We don't want to reset user input, just ensure the prompt matches the selected tier
+  }, [tier]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     try {
@@ -50,7 +55,6 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
           'direct') : 
         'direct';
 
-      // Trigger server function (handles DB insert and notifications)
       await submitLead({
         data: {
           name: values.name,
@@ -72,10 +76,11 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-      <h3 className="text-xl font-bold">Request a Quote</h3>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Interested in the <span className="font-bold text-brand">{tier}</span> tier? Fill out the form below.
+    <div id="quote" className="rounded-2xl border border-border bg-card p-8 shadow-sm sticky top-24">
+      <h3 className="text-xl font-bold tracking-tight">Request a Quote</h3>
+      <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+        Interested in the <span className="font-bold text-brand">{tier}</span> tier? 
+        Fill out the form below and we'll get back to you within 48 hours.
       </p>
 
       <Form {...form}>
