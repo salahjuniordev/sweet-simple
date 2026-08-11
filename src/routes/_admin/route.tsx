@@ -26,8 +26,19 @@ export const Route = createFileRoute("/_admin")({
     });
 
     if (!hasRole && !hasEditorRole) {
-      // If it's the first user ever, maybe they should be admin? 
-      // For now, just redirect if no role.
+      // Check if there are ANY admins in the system
+      const { count } = await supabase
+        .from("user_roles")
+        .select("*", { count: "exact", head: true })
+        .eq("role", "admin");
+
+      if (count === 0) {
+        // If no admins exist, redirect to bootstrap to allow creating the first one
+        throw redirect({
+          to: "/auth/bootstrap",
+        });
+      }
+
       throw redirect({
         to: "/",
       });
