@@ -11,6 +11,10 @@ import { posts, formatPostDate } from "@/lib/blog-data";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 import { services } from "@/lib/services-data";
 import { serviceIcons } from "@/lib/service-icons";
+import { caseStudies } from "@/lib/work-data";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { NewsletterForm } from "@/components/newsletter-form";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -45,26 +49,8 @@ const steps = [
 function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <a href="#top" className="flex items-center gap-3">
-            <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
-          </a>
-          <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
-            <a href="#process" className="transition-colors hover:text-brand">Process</a>
-            <a href="#work" className="transition-colors hover:text-brand">Why us</a>
-            <Link to="/blog" className="transition-colors hover:text-brand">Blog</Link>
-            <a href="#faq" className="transition-colors hover:text-brand">FAQs</a>
-          </nav>
-          <a
-            href="#contact"
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
-          >
-            Start a project
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
+
 
       <main id="top">
         <section className="relative overflow-hidden border-b border-border">
@@ -121,6 +107,25 @@ function Index() {
           </div>
         </section>
 
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-6xl px-6 py-10">
+            <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              Trusted by teams at
+            </p>
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-x-12 gap-y-5">
+              {["Northwind", "Kora Labs", "Verdant", "Atlas Foods", "Pulse Fit", "Meridian"].map((n) => (
+                <span
+                  key={n}
+                  className="text-lg font-black uppercase tracking-tight text-muted-foreground/60 transition-colors hover:text-brand"
+                >
+                  {n}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
         <section id="services" className="mx-auto max-w-6xl px-6 py-24">
           <h2 className="max-w-2xl text-4xl font-black tracking-tight md:text-5xl">
             Everything your brand needs, <span className="text-brand">under one roof</span>
@@ -170,8 +175,54 @@ function Index() {
           </div>
         </section>
 
+        <section className="border-b border-border bg-primary text-primary-foreground">
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-14 md:flex-row">
+            <div>
+              <h2 className="text-3xl font-black tracking-tight md:text-4xl">
+                Not sure which step you're on?
+              </h2>
+              <p className="mt-3 max-w-lg text-sm opacity-80">
+                Book a free 30-minute scoping call. We'll tell you what to fix first — even if it
+                isn't something we'd bill for.
+              </p>
+            </div>
+            <Link
+              to="/contact"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
+            >
+              Book a call <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
         <section id="work" className="mx-auto max-w-6xl px-6 py-24">
-          <div className="grid gap-12 md:grid-cols-2">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Work</p>
+              <h2 className="mt-4 text-4xl font-black tracking-tight md:text-5xl">Selected projects</h2>
+            </div>
+            <Link to="/work" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-brand">
+              All case studies <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {caseStudies.slice(0, 3).map((c) => (
+              <Link
+                key={c.slug}
+                to="/work/$slug"
+                params={{ slug: c.slug }}
+                className="group rounded-2xl border border-border p-7 transition-colors hover:border-brand"
+              >
+                <p className="text-xs font-semibold uppercase tracking-wider text-brand">{c.industry}</p>
+                <h3 className="mt-3 text-lg font-bold leading-snug group-hover:text-brand">{c.title}</h3>
+                <p className="mt-3 text-sm text-muted-foreground">{c.summary}</p>
+                <p className="mt-5 text-2xl font-black text-brand">{c.results[0]?.value}</p>
+                <p className="text-xs text-muted-foreground">{c.results[0]?.label}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-20 grid gap-12 md:grid-cols-2">
             <h2 className="text-4xl font-black tracking-tight md:text-5xl">
               Why teams stay with <span className="text-brand">Mario Studio</span>
             </h2>
@@ -192,6 +243,7 @@ function Index() {
             </ul>
           </div>
         </section>
+
 
 
         <section id="testimonials" className="border-y border-border bg-brand-soft">
@@ -276,6 +328,22 @@ function Index() {
         </section>
 
 
+        <section id="newsletter" className="border-t border-border bg-secondary">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 md:grid-cols-2">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Newsletter</p>
+              <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
+                One useful email a month
+              </h2>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Practical notes on branding, performance and security. No sales sequences, no fluff,
+                unsubscribe in one click.
+              </p>
+            </div>
+            <NewsletterForm />
+          </div>
+        </section>
+
         <section id="contact" className="border-t border-border bg-primary text-primary-foreground">
           <div className="mx-auto max-w-4xl px-6 py-24 text-center">
             <h2 className="text-4xl font-black tracking-tight md:text-5xl">
@@ -284,22 +352,27 @@ function Index() {
             <p className="mx-auto mt-4 max-w-xl opacity-80">
               Tell us about your project and get a free brand audit within 48 hours.
             </p>
-            <a
-              href="mailto:hello@mariostudio.com"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
-            >
-              hello@mariostudio.com <ArrowUpRight className="h-4 w-4" />
-            </a>
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
+              >
+                Start a project <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="mailto:hello@mariostudio.com"
+                className="inline-flex items-center rounded-full border border-primary-foreground/30 px-8 py-4 text-sm font-semibold transition-colors hover:border-brand hover:text-brand"
+              >
+                hello@mariostudio.com
+              </a>
+            </div>
           </div>
         </section>
+
       </main>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row">
-          <img src={logo.url} alt="Mario Studio" className="h-8 w-auto" />
-          <p>© {new Date().getFullYear()} Mario Studio. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
+
     </div>
   );
 }
