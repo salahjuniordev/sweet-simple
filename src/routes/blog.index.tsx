@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { posts, formatPostDate } from "@/lib/blog-data";
 
 export const Route = createFileRoute("/blog/")({
@@ -26,25 +28,16 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(posts.map((p) => p.category)))],
+    [],
+  );
+  const [active, setActive] = useState("All");
+  const visible = active === "All" ? posts : posts.filter((p) => p.category === active);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
-          </Link>
-          <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
-            <Link to="/blog" className="text-brand">Blog</Link>
-          </nav>
-          <a
-            href="mailto:hello@mariostudio.com"
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
-          >
-            Start a project
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         <section className="border-b border-border">
@@ -60,9 +53,27 @@ function BlogIndex() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-20">
-          <div className="grid gap-8 md:grid-cols-2">
-            {posts.map((post) => (
+        <section className="mx-auto max-w-6xl px-6 py-16">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setActive(c)}
+                aria-pressed={active === c}
+                className={`rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
+                  active === c
+                    ? "border-brand bg-brand text-brand-foreground"
+                    : "border-border hover:border-brand hover:text-brand"
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-12 grid gap-8 md:grid-cols-2">
+            {visible.map((post) => (
               <Link
                 key={post.slug}
                 to="/blog/$slug"
@@ -88,12 +99,7 @@ function BlogIndex() {
         </section>
       </main>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row">
-          <img src={logo.url} alt="Mario Studio" className="h-8 w-auto" />
-          <p>© {new Date().getFullYear()} Mario Studio. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

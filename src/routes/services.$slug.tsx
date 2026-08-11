@@ -2,7 +2,16 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
 import { getService, services, type Service } from "@/lib/services-data";
 import { serviceIcons } from "@/lib/service-icons";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { serviceFaqs } from "@/lib/service-faqs";
+import { caseStudyForService } from "@/lib/work-data";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -51,19 +60,13 @@ function ServiceDetail() {
   const { service } = Route.useLoaderData() as { service: Service };
   const Icon = serviceIcons[service.icon];
   const others = services.filter((s) => s.slug !== service.slug).slice(0, 4);
+  const faqItems = serviceFaqs[service.slug] ?? [];
+  const relatedCase = caseStudyForService(service.slug);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/">
-            <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
-          </Link>
-          <Link to="/services" className="text-sm font-semibold transition-colors hover:text-brand">
-            All services
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
+
 
       <main>
         <section className="relative overflow-hidden border-b border-border">
@@ -161,6 +164,53 @@ function ServiceDetail() {
           </div>
         </section>
 
+        {faqItems.length > 0 && (
+          <section className="mx-auto max-w-3xl px-6 py-20">
+            <h2 className="text-3xl font-black tracking-tight">
+              {service.title} <span className="text-brand">FAQs</span>
+            </h2>
+            <Accordion type="single" collapsible className="mt-8 w-full">
+              {faqItems.map((f, i) => (
+                <AccordionItem key={f.q} value={`s-${i}`}>
+                  <AccordionTrigger className="text-left text-base font-bold">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </section>
+        )}
+
+        {relatedCase && (
+          <section className="border-y border-border">
+            <div className="mx-auto max-w-6xl px-6 py-20">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Related case study</p>
+              <Link
+                to="/work/$slug"
+                params={{ slug: relatedCase.slug }}
+                className="group mt-6 grid gap-8 rounded-3xl border border-border p-8 transition-colors hover:border-brand md:grid-cols-[1.4fr_0.6fr] md:p-10"
+              >
+                <div>
+                  <h2 className="text-2xl font-bold leading-snug group-hover:text-brand md:text-3xl">
+                    {relatedCase.title}
+                  </h2>
+                  <p className="mt-3 max-w-xl text-muted-foreground">{relatedCase.summary}</p>
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold">
+                    Read the case study <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 self-center">
+                  {relatedCase.results.slice(0, 4).map((r) => (
+                    <div key={r.label}>
+                      <div className="text-2xl font-black text-brand">{r.value}</div>
+                      <div className="text-xs text-muted-foreground">{r.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </Link>
+            </div>
+          </section>
+        )}
+
         <section id="quote" className="bg-primary text-primary-foreground">
           <div className="mx-auto max-w-4xl px-6 py-20 text-center">
             <h2 className="text-4xl font-black tracking-tight md:text-5xl">
@@ -169,14 +219,16 @@ function ServiceDetail() {
             <p className="mx-auto mt-4 max-w-xl opacity-80">
               Send us a short brief and we'll reply within 48 hours with a scope and fixed price.
             </p>
-            <a
-              href={`mailto:hello@mariostudio.com?subject=${encodeURIComponent(service.title + " enquiry")}`}
+            <Link
+              to="/contact"
+
               className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
             >
               Request a quote <ArrowUpRight className="h-4 w-4" />
-            </a>
+            </Link>
           </div>
         </section>
+
 
         <section className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="text-2xl font-black tracking-tight">Other services</h2>
@@ -196,11 +248,8 @@ function ServiceDetail() {
         </section>
       </main>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-6 py-8 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Mario Studio. All rights reserved.
-        </div>
-      </footer>
+      <SiteFooter />
+
     </div>
   );
 }

@@ -1,7 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
-import { getPost, posts, formatPostDate } from "@/lib/blog-data";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { getPost, posts, formatPostDate, type Post } from "@/lib/blog-data";
+import { getAuthor } from "@/lib/authors";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -34,33 +36,13 @@ export const Route = createFileRoute("/blog/$slug")({
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
-          </Link>
-          <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-            <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
-            <Link to="/blog" className="text-brand">Blog</Link>
-          </nav>
-          <a
-            href="mailto:hello@mariostudio.com"
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
-          >
-            Start a project
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
       <main>{children}</main>
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row">
-          <img src={logo.url} alt="Mario Studio" className="h-8 w-auto" />
-          <p>© {new Date().getFullYear()} Mario Studio. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
+
 
 function PostNotFound() {
   return (
@@ -80,8 +62,12 @@ function PostNotFound() {
 }
 
 function BlogPost() {
-  const { post } = Route.useLoaderData();
-  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const { post } = Route.useLoaderData() as { post: Post };
+  const author = getAuthor(post.category);
+  const others = posts.filter((p) => p.slug !== post.slug);
+  const sameCategory = others.filter((p) => p.category === post.category);
+  const more = [...sameCategory, ...others.filter((p) => p.category !== post.category)].slice(0, 3);
+
 
   return (
     <Shell>
@@ -102,24 +88,36 @@ function BlogPost() {
           ))}
         </div>
 
-        <div className="mt-14 rounded-2xl border border-border bg-brand-soft p-8">
+        <aside className="mt-14 flex flex-col gap-5 rounded-2xl border border-border p-8 sm:flex-row">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+            {author.initials}
+          </span>
+          <div>
+            <h2 className="font-bold">{author.name}</h2>
+            <p className="text-sm text-brand">{author.role}</p>
+            <p className="mt-3 text-sm text-muted-foreground">{author.bio}</p>
+          </div>
+        </aside>
+
+        <div className="mt-8 rounded-2xl border border-border bg-brand-soft p-8">
           <h2 className="text-2xl font-bold">Want this done for you?</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Get a free brand and website audit within 48 hours.
           </p>
-          <a
-            href={`mailto:hello@mariostudio.com?subject=${encodeURIComponent(`Project enquiry — ${post.title}`)}`}
+          <Link
+            to="/contact"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition-colors hover:bg-brand hover:text-brand-foreground"
           >
             Start a project <ArrowUpRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
+
       </article>
 
       <section className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Keep reading</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Related articles</h2>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
             {more.map((p) => (
               <Link
                 key={p.slug}
