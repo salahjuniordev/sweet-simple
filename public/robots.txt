@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mariostudio.com/api/public/sitemap.xml
+Sitemap: https://mariostudio.com/api/public/sitemap/xml

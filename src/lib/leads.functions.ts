@@ -47,6 +47,14 @@ export const submitLead = createServerFn({ method: "POST" })
     if (config.team_notification_enabled) {
       console.log(`[Notification] Sending lead alert to team: ${config.team_emails.join(", ")}`);
       console.log(`Lead Details: ${JSON.stringify(data, null, 2)}`);
+      
+      // In a real implementation with Resend/SendGrid:
+      // await resend.emails.send({
+      //   from: 'Mario Studio <leads@mariostudio.com>',
+      //   to: config.team_emails,
+      //   subject: `New Lead: ${data.service_slug} (${data.tier})`,
+      //   text: `New lead from ${data.name} (${data.email}).\nService: ${data.service_slug}\nTier: ${data.tier}\nMessage: ${data.message}`
+      // });
     }
 
     if (config.auto_reply_enabled) {
