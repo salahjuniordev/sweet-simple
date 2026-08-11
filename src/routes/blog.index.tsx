@@ -8,19 +8,20 @@ import { posts, formatPostDate } from "@/lib/blog-data";
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Blog — Design, Development & Brand Insights | Mario Studio" },
+      { title: "Journal — Design, Development & Brand Insights | Mario Studio" },
       {
         name: "description",
         content:
           "Practical articles on branding, web development, UI/UX and web security from the Mario Studio team.",
       },
-      { property: "og:title", content: "Mario Studio Blog — Design & Development Insights" },
+      { property: "og:title", content: "Mario Studio Journal — Design & Development Insights" },
       {
         property: "og:description",
         content:
           "Brand audits, site performance, design handoffs and security basics, written by the studio that ships them.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/blog" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
