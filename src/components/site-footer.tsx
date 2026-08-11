@@ -1,13 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Linkedin, Instagram, Twitter, Dribbble } from "lucide-react";
+import { Facebook, Instagram, Twitter, Github } from "lucide-react";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 import { services } from "@/lib/services-data";
 
 const socials = [
-  { href: "https://www.linkedin.com", label: "LinkedIn", Icon: Linkedin },
+  { href: "https://www.facebook.com", label: "Facebook", Icon: Facebook },
   { href: "https://www.instagram.com", label: "Instagram", Icon: Instagram },
   { href: "https://twitter.com", label: "X / Twitter", Icon: Twitter },
-  { href: "https://dribbble.com", label: "Dribbble", Icon: Dribbble },
+  { href: "https://github.com", label: "GitHub", Icon: Github },
 ];
 
 export function SiteFooter() {
