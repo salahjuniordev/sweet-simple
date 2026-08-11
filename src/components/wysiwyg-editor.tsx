@@ -56,7 +56,7 @@ export function WYSIWYGEditor({ content, onChange, placeholder }: EditorProps) {
   }
 
   const setLink = () => {
-    const previousUrl = editor.getAttributes('link').href
+    const previousUrl = editor.getAttributes('link')['href']
     const url = window.prompt('URL', previousUrl)
 
     if (url === null) {
