@@ -12,6 +12,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { serviceFaqs } from "@/lib/service-faqs";
 import { caseStudyForService } from "@/lib/work-data";
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -90,20 +92,22 @@ function ServiceDetail() {
         <section className="relative overflow-hidden border-b border-border">
           <div className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-brand-soft blur-3xl" />
           <div className="relative mx-auto max-w-6xl px-6 py-20">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-brand-foreground">
-              <Icon className="h-7 w-7" />
-            </div>
-            <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[1] tracking-tight md:text-6xl">
-              {service.title}
-            </h1>
-            <p className="mt-4 text-xl font-bold text-brand">{service.tagline}</p>
-            <p className="mt-5 max-w-2xl text-lg text-muted-foreground">{service.intro}</p>
-            <a
-              href="#quote"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
-            >
-              Request a quote <ArrowUpRight className="h-4 w-4" />
-            </a>
+            <ScrollReveal direction="left">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-brand-foreground">
+                <Icon className="h-7 w-7" />
+              </div>
+              <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[1] tracking-tight md:text-6xl">
+                {service.title}
+              </h1>
+              <p className="mt-4 text-xl font-bold text-brand">{service.tagline}</p>
+              <p className="mt-5 max-w-2xl text-lg text-muted-foreground">{service.intro}</p>
+              <a
+                href="#quote"
+                className="mt-9 inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
+              >
+                Request a quote <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </ScrollReveal>
           </div>
         </section>
 
@@ -141,42 +145,43 @@ function ServiceDetail() {
               Fixed scopes, no surprise invoices. Anything outside a package is quoted up front.
             </p>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {service.plans.map((p) => (
-                <div
-                  key={p.name}
-                  className={`flex flex-col rounded-2xl border bg-card p-8 ${
-                    p.featured ? "border-brand ring-2 ring-brand" : "border-border"
-                  }`}
-                >
-                  {p.featured && (
-                    <span className="mb-4 self-start rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-foreground">
-                      Most popular
-                    </span>
-                  )}
-                  <h3 className="text-lg font-bold">{p.name}</h3>
-                  <div className="mt-3 flex items-baseline gap-2">
-                    <span className="text-4xl font-black">{p.price}</span>
-                    <span className="text-sm text-muted-foreground">{p.note}</span>
-                  </div>
-                  <ul className="mt-6 flex-1 space-y-3 text-sm">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href="#quote"
-                    className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition-colors ${
-                      p.featured
-                        ? "bg-brand text-brand-foreground"
-                        : "border border-border hover:border-brand"
+              {service.plans.map((p, idx) => (
+                <ScrollReveal key={p.name} direction="up" delay={idx * 0.1}>
+                  <div
+                    className={`flex flex-col h-full rounded-2xl border bg-card p-8 ${
+                      p.featured ? "border-brand ring-2 ring-brand" : "border-border"
                     }`}
                   >
-                    Choose {p.name}
-                  </a>
-                </div>
+                    {p.featured && (
+                      <span className="mb-4 self-start rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-foreground">
+                        Most popular
+                      </span>
+                    )}
+                    <h3 className="text-lg font-bold">{p.name}</h3>
+                    <div className="mt-3 flex items-baseline gap-2">
+                      <span className="text-4xl font-black">{p.price}</span>
+                      <span className="text-sm text-muted-foreground">{p.note}</span>
+                    </div>
+                    <ul className="mt-6 flex-1 space-y-3 text-sm">
+                      {p.features.map((f) => (
+                        <li key={f} className="flex gap-2">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#quote"
+                      className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition-colors ${
+                        p.featured
+                          ? "bg-brand text-brand-foreground"
+                          : "border border-border hover:border-brand"
+                      }`}
+                    >
+                      Choose {p.name}
+                    </a>
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
