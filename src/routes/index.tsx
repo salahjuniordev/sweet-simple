@@ -1,5 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Quote } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { testimonials, faqs } from "@/lib/site-content";
+import { posts, formatPostDate } from "@/lib/blog-data";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 import { services } from "@/lib/services-data";
 import { serviceIcons } from "@/lib/service-icons";
@@ -46,6 +54,8 @@ function Index() {
             <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
             <a href="#process" className="transition-colors hover:text-brand">Process</a>
             <a href="#work" className="transition-colors hover:text-brand">Why us</a>
+            <Link to="/blog" className="transition-colors hover:text-brand">Blog</Link>
+            <a href="#faq" className="transition-colors hover:text-brand">FAQs</a>
           </nav>
           <a
             href="#contact"
@@ -182,6 +192,89 @@ function Index() {
             </ul>
           </div>
         </section>
+
+
+        <section id="testimonials" className="border-y border-border bg-brand-soft">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Testimonials</p>
+            <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight md:text-5xl">
+              What clients say after launch
+            </h2>
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {testimonials.map((t) => (
+                <figure
+                  key={t.name}
+                  className="flex flex-col justify-between rounded-2xl border border-border bg-background p-8"
+                >
+                  <Quote className="h-7 w-7 text-brand" />
+                  <blockquote className="mt-5 text-base leading-relaxed">"{t.quote}"</blockquote>
+                  <figcaption className="mt-7 flex items-center gap-4">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                      {t.initials}
+                    </span>
+                    <span>
+                      <span className="block font-bold">{t.name}</span>
+                      <span className="block text-sm text-muted-foreground">{t.role}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="blog" className="mx-auto max-w-6xl px-6 py-24">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">Journal</p>
+              <h2 className="mt-4 text-4xl font-black tracking-tight md:text-5xl">From the studio</h2>
+            </div>
+            <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-brand">
+              All articles <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {posts.slice(0, 3).map((post) => (
+              <Link
+                key={post.slug}
+                to="/blog/$slug"
+                params={{ slug: post.slug }}
+                className="group rounded-2xl border border-border p-7 transition-colors hover:border-brand"
+              >
+                <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <span className="text-brand">{post.category}</span>
+                  <span>{formatPostDate(post.date)}</span>
+                </div>
+                <h3 className="mt-4 text-lg font-bold leading-snug group-hover:text-brand">{post.title}</h3>
+                <p className="mt-3 text-sm text-muted-foreground">{post.excerpt}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section id="faq" className="border-t border-border">
+          <div className="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand">FAQs</p>
+              <h2 className="mt-4 text-4xl font-black tracking-tight md:text-5xl">
+                Questions we get <span className="text-brand">every week</span>
+              </h2>
+              <p className="mt-5 text-sm text-muted-foreground">
+                Still unsure? Email us and we'll answer honestly, even if the answer is that you
+                don't need us yet.
+              </p>
+            </div>
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((f, i) => (
+                <AccordionItem key={f.q} value={`item-${i}`}>
+                  <AccordionTrigger className="text-left text-base font-bold">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
 
         <section id="contact" className="border-t border-border bg-primary text-primary-foreground">
           <div className="mx-auto max-w-4xl px-6 py-24 text-center">
