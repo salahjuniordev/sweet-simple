@@ -166,6 +166,7 @@ export type Database = {
           message: string | null
           name: string
           service_slug: string
+          source: string | null
           status: string | null
           tier: string
         }
@@ -176,6 +177,7 @@ export type Database = {
           message?: string | null
           name: string
           service_slug: string
+          source?: string | null
           status?: string | null
           tier: string
         }
@@ -186,6 +188,7 @@ export type Database = {
           message?: string | null
           name?: string
           service_slug?: string
+          source?: string | null
           status?: string | null
           tier?: string
         }

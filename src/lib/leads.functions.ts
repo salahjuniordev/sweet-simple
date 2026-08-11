@@ -9,11 +9,29 @@ export const submitLead = createServerFn({ method: "POST" })
       message: z.string(),
       service_slug: z.string(),
       tier: z.string(),
+      source: z.string().optional(),
     }).parse(data)
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
+    // Save to database
+    const { error: dbError } = await supabaseAdmin
+      .from("lead_submissions")
+      .insert({
+        name: data.name,
+        email: data.email,
+        message: data.message,
+        service_slug: data.service_slug,
+        tier: data.tier,
+        source: data.source || 'direct'
+      } as any);
+
+    if (dbError) {
+      console.error("Error saving lead to database:", dbError);
+      throw dbError;
+    }
+
     // Fetch notification settings
     const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
       .select("value")
@@ -85,13 +103,14 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
     
     if (!leads || leads.length === 0) return { csv: "No data" };
 
-    const headers = ["Date", "Name", "Email", "Service", "Tier", "Status"];
+    const headers = ["Date", "Name", "Email", "Service", "Tier", "Source", "Status"];
     const rows = leads.map(l => [
       l.created_at,
       l.name,
       l.email,
       l.service_slug,
       l.tier,
+      (l as any).source || 'direct',
       l.status
     ].join(","));
 
