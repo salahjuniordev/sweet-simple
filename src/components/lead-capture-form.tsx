@@ -50,7 +50,7 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
         message: values.message,
         service_slug: serviceSlug,
         tier: tier,
-        source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
+        // source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
       } as any);
 
       if (error) throw error;

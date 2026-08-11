@@ -9,7 +9,7 @@ export const submitLead = createServerFn({ method: "POST" })
       message: z.string(),
       service_slug: z.string(),
       tier: z.string(),
-      source: z.string().optional(),
+      // source: z.string().optional(),
     }).parse(data)
   )
   .handler(async ({ data }) => {
@@ -70,7 +70,7 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     service: z.string().optional(),
     tier: z.string().optional(),
-    source: z.string().optional(),
+    // source: z.string().optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional()
   }).optional().parse(data))
@@ -80,7 +80,7 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
 
     if (data?.service) query = query.eq("service_slug", data.service);
     if (data?.tier) query = query.eq("tier", data.tier);
-    if (data?.source) query = (query as any).eq("source", data.source);
+    // if (data?.source) query = (query as any).eq("source", data.source);
     if (data?.startDate) query = query.gte("created_at", data.startDate);
     if (data?.endDate) query = query.lte("created_at", data.endDate);
 
@@ -95,7 +95,8 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
       l.email,
       l.service_slug,
       l.tier,
-      (l as any).source || "direct",
+      // (l as any).source || "direct",
+      "direct",
       l.status
     ].join(","));
 

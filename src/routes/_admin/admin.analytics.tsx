@@ -81,7 +81,8 @@ function AdminAnalytics() {
     return leads.filter(lead => {
       const matchesService = filters.service === "all" || lead.service_slug === filters.service;
       const matchesTier = filters.tier === "all" || lead.tier === filters.tier;
-      const matchesSource = filters.source === "all" || (lead as any).source === filters.source;
+      // const matchesSource = filters.source === "all" || (lead as any).source === filters.source;
+      const matchesSource = true;
       
       let matchesDate = true;
       if (filters.startDate || filters.endDate) {
@@ -101,7 +102,7 @@ function AdminAnalytics() {
         data: {
           service: filters.service === "all" ? undefined : filters.service,
           tier: filters.tier === "all" ? undefined : filters.tier,
-          source: filters.source === "all" ? undefined : filters.source,
+          // source: filters.source === "all" ? undefined : filters.source,
           startDate: filters.startDate || undefined,
           endDate: filters.endDate || undefined
         }
@@ -132,7 +133,8 @@ function AdminAnalytics() {
   // Options for filters
   const services = Array.from(new Set(leads?.map(l => l.service_slug) || []));
   const tiers = Array.from(new Set(leads?.map(l => l.tier) || []));
-  const sources = Array.from(new Set(leads?.map(l => (l as any).source || 'direct') || []));
+  // const sources = Array.from(new Set(leads?.map(l => (l as any).source || 'direct') || []));
+  const sources: string[] = [];
 
   // Chart data
   const serviceData = filteredLeads.reduce((acc: any[], lead) => {
@@ -156,7 +158,8 @@ function AdminAnalytics() {
   }, []);
 
   const sourceData = filteredLeads.reduce((acc: any[], lead) => {
-    const source = (lead as any).source || 'direct';
+    // const source = (lead as any).source || 'direct';
+    const source = 'direct';
     const existing = acc.find(i => i.name === source);
     if (existing) {
       existing.value += 1;
