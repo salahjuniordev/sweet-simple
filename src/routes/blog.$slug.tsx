@@ -97,7 +97,7 @@ function BlogPost() {
         <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight md:text-5xl">{post.title}</h1>
         <p className="mt-5 text-lg text-muted-foreground">{post.excerpt}</p>
         <div className="mt-10 space-y-6 text-base leading-relaxed">
-          {post.body.map((p) => (
+          {post.body.map((p: string) => (
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
         </div>
