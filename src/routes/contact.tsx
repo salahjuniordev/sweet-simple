@@ -9,18 +9,19 @@ import { services } from "@/lib/services-data";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Mario Studio — Start a Project" },
+      { title: "Contact Us — Start Your Project | Mario Studio" },
       {
         name: "description",
         content:
-          "Tell us about your project and get a free 30-minute scoping call plus a brand audit within 48 hours. Remote studio serving Europe, Africa and North America.",
+          "Ready to build something sharp? Contact Mario Studio for a free brand audit and a transparent project quote.",
       },
-      { property: "og:title", content: "Contact Mario Studio — Start a Project" },
+      { property: "og:title", content: "Start a Project | Mario Studio" },
       {
         property: "og:description",
-        content: "Send us your brief and get a scoped reply within 48 hours.",
+        content: "Tell us about your project and get a free brand audit within 48 hours.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/contact" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
