@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ArrowUpRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getServices } from "@/lib/cms-queries";
 import {
   Accordion,
   AccordionContent,
@@ -41,6 +43,14 @@ const included = [
 ];
 
 function PricingPage() {
+  const { data: services } = useQuery({
+    queryKey: ["services"],
+    queryFn: getServices,
+  });
+
+  const webDev = services?.find(s => s.slug === 'web-development');
+  const plans = (webDev?.plans as any[]) || [];
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -59,58 +69,47 @@ function PricingPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-6 py-16">
-          <div className="overflow-x-auto rounded-3xl border border-border">
-            <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-              <caption className="sr-only">Pricing comparison across all Mario Studio services</caption>
-              <thead className="bg-secondary">
-                <tr>
-                  <th scope="col" className="px-6 py-4 font-black">Service</th>
-                  <th scope="col" className="px-6 py-4 font-black">Entry</th>
-                  <th scope="col" className="px-6 py-4 font-black">Most popular</th>
-                  <th scope="col" className="px-6 py-4 font-black">Custom</th>
-                  <th scope="col" className="px-6 py-4" />
-                </tr>
-              </thead>
-              <tbody>
-                {services.filter(s => s.slug === 'web-development').map((s) => {
-                  const [a, b, c] = s.plans;
-                  return (
-                    <tr key={s.slug} className="border-t border-border align-top">
-                      <th scope="row" className="px-6 py-5 font-bold">
-                        {s.title}
-                        <span className="mt-1 block max-w-[16rem] text-xs font-normal text-muted-foreground">
-                          {s.desc}
-                        </span>
-                      </th>
-                      <td className="px-6 py-5">
-                        <span className="block font-bold">{a?.price ?? "—"}</span>
-                        <span className="text-xs text-muted-foreground">{a?.name} · {a?.note}</span>
-                      </td>
-                      <td className="bg-brand-soft px-6 py-5">
-                        <span className="block font-bold text-brand">{b?.price ?? "—"}</span>
-                        <span className="text-xs text-muted-foreground">{b?.name} · {b?.note}</span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <span className="block font-bold">{c?.price ?? "—"}</span>
-                        <span className="text-xs text-muted-foreground">{c?.name} · {c?.note}</span>
-                      </td>
-                      <td className="px-6 py-5">
-                        <Link
-                          to="/services/$slug"
-                          params={{ slug: s.slug }}
-                          className="inline-flex items-center gap-1 whitespace-nowrap text-xs font-bold hover:text-brand"
-                        >
-                          Details <ArrowUpRight className="h-3.5 w-3.5" />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <section className="mx-auto max-w-6xl px-6 py-20">
+          <div className="grid gap-6 md:grid-cols-3">
+            {plans.map((p, idx) => (
+              <div
+                key={p.name}
+                className={`flex flex-col h-full rounded-2xl border bg-card p-8 ${
+                  p.featured ? "border-brand ring-2 ring-brand" : "border-border"
+                }`}
+              >
+                {p.featured && (
+                  <span className="mb-4 self-start rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-foreground">
+                    Most popular
+                  </span>
+                )}
+                <h3 className="text-lg font-bold">{p.name}</h3>
+                <div className="mt-3 flex items-baseline gap-2">
+                  <span className="text-4xl font-black">{p.price}</span>
+                  <span className="text-sm text-muted-foreground">{p.note}</span>
+                </div>
+                <ul className="mt-6 flex-1 space-y-3 text-sm">
+                  {p.features.map((f: string) => (
+                    <li key={f} className="flex gap-2 text-muted-foreground">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/contact"
+                  className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition-colors ${
+                    p.featured
+                      ? "bg-brand text-brand-foreground"
+                      : "border border-border hover:border-brand"
+                  }`}
+                >
+                  Choose {p.name}
+                </Link>
+              </div>
+            ))}
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="mt-10 text-xs text-muted-foreground text-center">
             All prices in USD, excluding tax. Retainers are billed monthly and can be cancelled anytime.
           </p>
         </section>
