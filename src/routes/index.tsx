@@ -1,5 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Quote } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { testimonials, faqs } from "@/lib/site-content";
+import { posts, formatPostDate } from "@/lib/blog-data";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 import { services } from "@/lib/services-data";
 import { serviceIcons } from "@/lib/service-icons";
