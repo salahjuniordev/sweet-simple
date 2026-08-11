@@ -12,8 +12,7 @@ import {
   Link as LinkIcon, 
   Image as ImageIcon,
   Undo,
-  Redo,
-  Code
+  Redo
 } from 'lucide-react'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
@@ -56,7 +55,7 @@ export function WYSIWYGEditor({ content, onChange, placeholder }: EditorProps) {
   }
 
   const setLink = () => {
-    const previousUrl = editor.getAttributes('link')['href']
+    const previousUrl = editor.getAttributes('link')['href'] as string | undefined
     const url = window.prompt('URL', previousUrl)
 
     if (url === null) {
@@ -72,7 +71,7 @@ export function WYSIWYGEditor({ content, onChange, placeholder }: EditorProps) {
   }
 
   return (
-    <div className="border border-border rounded-xl overflow-hidden bg-background">
+    <div className="border border-border rounded-xl overflow-hidden bg-background text-foreground">
       <div className="flex flex-wrap items-center gap-1 p-2 border-b border-border bg-secondary/20">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -128,7 +127,7 @@ export function WYSIWYGEditor({ content, onChange, placeholder }: EditorProps) {
           icon={<Redo className="h-4 w-4" />}
         />
       </div>
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="min-h-[200px]" />
     </div>
   )
 }
