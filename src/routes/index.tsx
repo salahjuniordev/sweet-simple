@@ -54,6 +54,8 @@ function Index() {
             <Link to="/services" className="transition-colors hover:text-brand">Services</Link>
             <a href="#process" className="transition-colors hover:text-brand">Process</a>
             <a href="#work" className="transition-colors hover:text-brand">Why us</a>
+            <Link to="/blog" className="transition-colors hover:text-brand">Blog</Link>
+            <a href="#faq" className="transition-colors hover:text-brand">FAQs</a>
           </nav>
           <a
             href="#contact"
