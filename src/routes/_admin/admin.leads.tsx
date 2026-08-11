@@ -3,12 +3,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle, Clock, Trash2, Mail, Filter, Eye, X } from "lucide-react";
+import { CheckCircle, Clock, Trash2, Mail, Filter, Eye, X, Bell, Calendar as CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { format, isAfter, isBefore, addDays } from "date-fns";
 
 export const Route = createFileRoute("/_admin/admin/leads")({
   component: AdminLeads,
@@ -44,10 +48,30 @@ function AdminLeads() {
   });
 
   const filteredLeads = leads?.filter((lead) => {
-    const matchesService = serviceFilter === "all" || lead.service_slug === serviceFilter;
+    const matchesService = serviceFilter === "all" || lead.service_slug === serviceFilter || (serviceFilter === "needs-followup" && lead.followup_at && isBefore(new Date(lead.followup_at), new Date()) && lead.status !== 'completed');
     const matchesTier = tierFilter === "all" || lead.tier.toLowerCase() === tierFilter.toLowerCase();
     return matchesService && matchesTier;
   });
+
+  const updateFollowup = async (id: string, followupAt: string | null, notes?: string) => {
+    const { error } = await supabase
+      .from("lead_submissions")
+      .update({ 
+        followup_at: followupAt,
+        followup_notes: notes !== undefined ? notes : selectedLead?.followup_notes 
+      } as any)
+      .eq("id", id);
+    
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success(followupAt ? "Follow-up reminder set" : "Follow-up cleared");
+      refetch();
+      if (selectedLead?.id === id) {
+        setSelectedLead({ ...selectedLead, followup_at: followupAt, followup_notes: notes !== undefined ? notes : selectedLead.followup_notes });
+      }
+    }
+  };
 
   const updateStatus = async (id: string, status: string) => {
     const { error } = await supabase
@@ -123,6 +147,19 @@ function AdminLeads() {
             </SelectContent>
           </Select>
 
+          <Select 
+            value={serviceFilter === "needs-followup" ? "needs-followup" : "all-status"} 
+            onValueChange={(val) => val === "needs-followup" ? setServiceFilter("needs-followup") : setServiceFilter("all")}
+          >
+            <SelectTrigger className="w-[180px] bg-background">
+              <SelectValue placeholder="Follow-up Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all-status">All Status</SelectItem>
+              <SelectItem value="needs-followup">Needs Follow-up</SelectItem>
+            </SelectContent>
+          </Select>
+
           {(serviceFilter !== "all" || tierFilter !== "all") && (
             <Button 
               variant="ghost" 
@@ -167,9 +204,14 @@ function AdminLeads() {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className={`capitalize ${getStatusColor(lead.status)}`}>
-                    {lead.status || 'new'}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className={`capitalize ${getStatusColor(lead.status)}`}>
+                      {lead.status || 'new'}
+                    </Badge>
+                    {lead.followup_at && isBefore(new Date(lead.followup_at), new Date()) && lead.status !== 'completed' && (
+                      <Bell className="h-3 w-3 text-destructive animate-pulse" />
+                    )}
+                  </div>
                 </TableCell>
                 <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-1">
@@ -233,6 +275,57 @@ function AdminLeads() {
             <div className="space-y-1">
               <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Source</h4>
               <p className="font-semibold capitalize">{selectedLead?.source || 'Direct'}</p>
+            </div>
+            <div className="space-y-1 col-span-2 border-t pt-4 mt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                <Bell className="h-3 w-3" /> Follow-up Reminder
+              </h4>
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex-1">
+                  <Input 
+                    type="datetime-local" 
+                    value={selectedLead?.followup_at ? format(new Date(selectedLead.followup_at), "yyyy-MM-dd'T'HH:mm") : ''}
+                    onChange={(e) => updateFollowup(selectedLead.id, e.target.value ? new Date(e.target.value).toISOString() : null)}
+                    className="bg-muted/30"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => updateFollowup(selectedLead.id, addDays(new Date(), 1).toISOString())}
+                  >
+                    +1 Day
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => updateFollowup(selectedLead.id, addDays(new Date(), 3).toISOString())}
+                  >
+                    +3 Days
+                  </Button>
+                  {selectedLead?.followup_at && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => updateFollowup(selectedLead.id, null)}
+                      className="text-destructive"
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="mt-4">
+                <Label className="text-[10px] font-bold uppercase text-muted-foreground mb-1 block">Follow-up Notes</Label>
+                <Textarea 
+                  placeholder="Internal notes about the follow-up..."
+                  value={selectedLead?.followup_notes || ''}
+                  onChange={(e) => setSelectedLead({ ...selectedLead, followup_notes: e.target.value })}
+                  onBlur={(e) => updateFollowup(selectedLead.id, selectedLead.followup_at, e.target.value)}
+                  className="bg-muted/30 min-h-[80px]"
+                />
+              </div>
             </div>
           </div>
 

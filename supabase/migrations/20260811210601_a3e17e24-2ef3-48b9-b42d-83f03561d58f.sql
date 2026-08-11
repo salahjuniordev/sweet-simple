@@ -1,0 +1,1 @@
+ALTER TABLE public.lead_submissions ADD COLUMN IF NOT EXISTS followup_at TIMESTAMPTZ, ADD COLUMN IF NOT EXISTS followup_notes TEXT; GRANT SELECT, INSERT, UPDATE, DELETE ON public.lead_submissions TO authenticated; GRANT ALL ON public.lead_submissions TO service_role;
