@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { formatPostDate } from "@/lib/blog-data";
@@ -31,12 +31,13 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
+  const [search, setSearch] = useState("");
+  const [active, setActive] = useState("All");
+
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: () => getPosts(),
   });
-
-  const [active, setActive] = useState("All");
 
   const categories = useMemo(
     () => {
@@ -48,8 +49,18 @@ function BlogIndex() {
 
   const visible = useMemo(() => {
     if (!posts) return [];
-    return active === "All" ? posts : posts.filter((p) => p.category === active);
-  }, [posts, active]);
+    let filtered = active === "All" ? posts : posts.filter((p) => p.category === active);
+    
+    if (search) {
+      const s = search.toLowerCase();
+      filtered = filtered.filter(p => 
+        p.title.toLowerCase().includes(s) || 
+        p.excerpt.toLowerCase().includes(s)
+      );
+    }
+    
+    return filtered;
+  }, [posts, active, search]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -70,22 +81,34 @@ function BlogIndex() {
         </section>
 
         <section className="mx-auto max-w-6xl px-6 py-16">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setActive(c)}
-                aria-pressed={active === c}
-                className={`rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
-                  active === c
-                    ? "border-brand bg-brand text-brand-foreground"
-                    : "border-border hover:border-brand hover:text-brand"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="flex flex-wrap gap-2">
+              {categories.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setActive(c)}
+                  aria-pressed={active === c}
+                  className={`rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
+                    active === c
+                      ? "border-brand bg-brand text-brand-foreground"
+                      : "border-border hover:border-brand hover:text-brand"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input 
+                type="text"
+                placeholder="Search articles..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-full text-sm focus:outline-none focus:border-brand"
+              />
+            </div>
           </div>
 
           {isLoading ? (
