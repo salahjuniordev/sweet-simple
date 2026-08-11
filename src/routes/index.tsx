@@ -16,6 +16,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { NewsletterForm } from "@/components/newsletter-form";
 
+import { HeroSlider } from "@/components/hero-slider";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -69,43 +71,8 @@ function Index() {
 
 
       <main id="top">
-        <section className="relative overflow-hidden border-b border-border">
-          <div className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-brand-soft blur-3xl" />
-          <div className="relative mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-[1.2fr_0.8fr] md:items-center md:py-32">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-brand px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-foreground">
-                <span className="h-2 w-2 rounded-full bg-brand" />
-                Digital studio
-              </span>
-              <h1 className="mt-6 text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
-                Brands built sharp.
-                <br />
-                <span className="text-brand">Websites built fast.</span>
-              </h1>
-              <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-                Mario Studio is a full-service digital partner: identity, design, development,
-                video and marketing — delivered by one team that stays with you after launch.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-bold text-brand-foreground transition-transform hover:-translate-y-0.5"
-                >
-                  Get a free brand audit <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <Link
-                  to="/services"
-                  className="inline-flex items-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold transition-colors hover:border-brand"
-                >
-                  See services &amp; pricing
-                </Link>
-              </div>
-            </div>
-            <div className="relative rounded-3xl border border-border bg-secondary p-10">
-              <img src={logo.url} alt="Mario Studio brand mark" className="mx-auto w-full max-w-xs" />
-            </div>
-          </div>
-        </section>
+        <HeroSlider />
+
 
         <section className="border-b border-border bg-primary text-primary-foreground">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
