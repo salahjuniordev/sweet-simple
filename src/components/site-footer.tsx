@@ -16,7 +16,9 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>
-            <img src={logo.url} alt="Mario Studio" className="h-[90px] w-auto" />
+            <Link to="/" className="inline-block transition-opacity hover:opacity-80">
+              <img src={logo.url} alt="Mario Studio" className="h-[90px] w-auto" />
+            </Link>
             <p className="mt-5 max-w-xs text-sm text-muted-foreground">
               A full-service digital studio: identity, design, development, video and marketing —
               built by one team that stays after launch.
