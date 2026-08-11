@@ -90,7 +90,7 @@ function Index() {
           <ScrollReveal direction="up">
             <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
               {[
-                ["9", "Services in-house"],
+                ["15", "Services in-house"],
                 ["120+", "Projects delivered"],
                 ["48h", "Average response"],
                 ["99.9%", "Uptime maintained"],
@@ -128,7 +128,7 @@ function Index() {
               Everything your brand needs, <span className="text-brand">under one roof</span>
             </h2>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              Nine disciplines that work together — so strategy, design and code never contradict each other.
+              Over 15 premium disciplines that work together — so strategy, design and code never contradict each other.
             </p>
           </ScrollReveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
