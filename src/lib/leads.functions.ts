@@ -16,8 +16,7 @@ export const submitLead = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // Fetch notification settings
-    const { data: settings } = await supabaseAdmin
-      .from("notification_settings")
+    const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
       .select("value")
       .eq("key", "lead_notifications")
       .single();
