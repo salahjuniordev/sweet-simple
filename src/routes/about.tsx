@@ -6,11 +6,11 @@ import { SiteFooter } from "@/components/site-footer";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Mario Studio — Our Story, Team & Values" },
+      { title: "About Mario Studio — Our Story, Remote Team & Design Values" },
       {
         name: "description",
         content:
-          "Mario Studio is a remote digital studio combining branding, design, development, video and marketing in one team. Meet the people and the principles behind the work.",
+          "Meet the specialists behind Mario Studio. We are a remote-first digital team dedicated to removing handoffs between design, code, and marketing.",
       },
       { property: "og:title", content: "About Mario Studio — Story, Team & Values" },
       {
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/about")({
         content: "One team for identity, design, development, video and marketing — here is how we got here.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/about" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),

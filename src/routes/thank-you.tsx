@@ -7,16 +7,16 @@ import { posts, formatPostDate } from "@/lib/blog-data";
 export const Route = createFileRoute("/thank-you")({
   head: () => ({
     meta: [
-      { title: "Thanks — Your Brief Is In | Mario Studio" },
+      { title: "Thank You — Project Requested | Mario Studio" },
       {
         name: "description",
-        content: "Your project brief reached Mario Studio. We reply with a scoped response within 48 hours.",
+        content: "We've received your request and will be in touch within 48 hours.",
       },
       { property: "og:title", content: "Thanks — Your Brief Is In | Mario Studio" },
       { property: "og:description", content: "We received your brief and will reply within 48 hours." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "robots", content: "noindex" },
+      { name: "robots", content: "noindex, follow" },
     ],
   }),
   component: ThankYouPage,

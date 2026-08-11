@@ -19,11 +19,11 @@ import { NewsletterForm } from "@/components/newsletter-form";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mario Studio — Digital Services & Brand Design" },
+      { title: "Mario Studio — Digital Services, Brand Design & Web Development" },
       {
         name: "description",
         content:
-          "Mario Studio builds websites, brands and campaigns: web development, graphic design, UI/UX, video editing, brand audits, maintenance, security and digital marketing.",
+          "Mario Studio is a full-service digital partner building sharp brands and fast websites. Experts in web development, identity branding, UI/UX, and digital marketing.",
       },
       { property: "og:title", content: "Mario Studio — Digital Services & Brand Design" },
       {
@@ -32,7 +32,23 @@ export const Route = createFileRoute("/")({
           "Web development, identity branding, UI/UX, video editing, brand audit, maintenance, security and digital marketing under one studio.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/" },
       { name: "twitter:card", content: "summary_large_image" },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Mario Studio",
+          url: "https://mariostudio.com",
+          logo: "https://mariostudio.com/favicon.png",
+          description: "Full-service digital studio specializing in brand design and web development.",
+          sameAs: [
+            "https://twitter.com/mariostudio",
+            "https://linkedin.com/company/mariostudio",
+            "https://instagram.com/mariostudio"
+          ]
+        }
+      }
     ],
   }),
   component: Index,

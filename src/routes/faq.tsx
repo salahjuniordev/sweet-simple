@@ -15,11 +15,11 @@ import { serviceFaqs } from "@/lib/service-faqs";
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
-      { title: "FAQs — Timelines, Pricing & Process | Mario Studio" },
+      { title: "FAQs — Answers on Process, Timelines & Ownership | Mario Studio" },
       {
         name: "description",
         content:
-          "Answers on project timelines, pricing, ownership, process and support — plus service-specific questions for all nine Mario Studio disciplines.",
+          "Find answers to common questions about project timelines, pricing, code ownership, and our nine core digital services.",
       },
       { property: "og:title", content: "Frequently Asked Questions | Mario Studio" },
       {
@@ -27,7 +27,22 @@ export const Route = createFileRoute("/faq")({
         content: "Everything clients ask before starting: timelines, cost, ownership and what happens after launch.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/faq" },
       { name: "twitter:card", content: "summary_large_image" },
+      {
+        "script:ld+json": {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map(f => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: f.a
+            }
+          }))
+        }
+      }
     ],
   }),
   component: FaqPage,

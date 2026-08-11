@@ -26,8 +26,8 @@ export const Route = createFileRoute("/services/$slug")({
       };
     }
     const { service } = loaderData;
-    const title = `${service.title} — Mario Studio`;
-    const description = `${service.tagline}. ${service.desc} Packages from ${service.plans[0]?.price ?? "$0"}.`;
+    const title = `${service.title} — Digital Services | Mario Studio`;
+    const description = `${service.tagline}. ${service.desc} Expert ${service.title.toLowerCase()} starting from ${service.plans[0]?.price ?? "$0"}.`;
     return {
       meta: [
         { title },
@@ -35,7 +35,25 @@ export const Route = createFileRoute("/services/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
+        { property: "og:url", content: `https://mariostudio.com/services/${service.slug}` },
         { name: "twitter:card", content: "summary_large_image" },
+        {
+          "script:ld+json": {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: service.title,
+            description: service.desc,
+            provider: {
+              "@type": "Organization",
+              name: "Mario Studio"
+            },
+            offers: {
+              "@type": "AggregateOffer",
+              lowPrice: service.plans[0]?.price.replace(/[^0-9.]/g, '') || "0",
+              priceCurrency: "USD"
+            }
+          }
+        }
       ],
     };
   },

@@ -7,18 +7,20 @@ import logo from "@/assets/mario-studio-logo.png.asset.json";
 export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
-      { title: "Services & Pricing — Mario Studio" },
+      { title: "Digital Services — Branding, Design & Development | Mario Studio" },
       {
         name: "description",
         content:
-          "Nine digital services with transparent pricing: web development, graphic design, identity branding, UI/UX, video editing, brand audit, maintenance, security and marketing.",
+          "Nine disciplines working together to grow your brand. Experts in identity, UI/UX, fast websites, video production, and digital marketing.",
       },
-      { property: "og:title", content: "Services & Pricing — Mario Studio" },
+      { property: "og:title", content: "Digital Services & Pricing | Mario Studio" },
       {
         property: "og:description",
-        content: "Transparent pricing for nine in-house digital services at Mario Studio.",
+        content:
+          "Nine disciplines that work together — so strategy, design and code never contradict each other.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://mariostudio.com/services" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
