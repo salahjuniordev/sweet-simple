@@ -13,13 +13,13 @@ export const Route = createFileRoute("/services/")({
       {
         name: "description",
         content:
-          "Nine disciplines working together to grow your brand. Experts in identity, UI/UX, fast websites, video production, and digital marketing.",
+          "Premium digital services working together to grow your brand. Experts in identity, UI/UX, fast websites, video production, AI automation, and digital marketing.",
       },
       { property: "og:title", content: "Digital Services & Pricing | Mario Studio" },
       {
         property: "og:description",
         content:
-          "Nine disciplines that work together — so strategy, design and code never contradict each other.",
+          "Comprehensive digital disciplines that work together — so strategy, design and code never contradict each other.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://mariostudio.com/services" },
