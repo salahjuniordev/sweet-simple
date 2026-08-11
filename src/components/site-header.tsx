@@ -15,7 +15,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
         <Link to="/" className="flex items-center gap-3">
-          <img src={logo.url} alt="Mario Studio logo" className="h-10 w-auto" />
+          <img src={logo.url} alt="Mario Studio logo" className="h-[90px] w-auto" />
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-medium lg:flex">
           {links.map((l) => (
