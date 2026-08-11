@@ -9,7 +9,13 @@ export type Service = {
     | "SearchCheck"
     | "Wrench"
     | "ShieldCheck"
-    | "Megaphone";
+    | "Megaphone"
+    | "PlayCircle"
+    | "ShoppingCart"
+    | "Cpu"
+    | "BarChart3"
+    | "PenLine"
+    | "Target";
   title: string;
   desc: string;
   tagline: string;
