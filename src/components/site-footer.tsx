@@ -1,7 +1,20 @@
 import { Link } from "@tanstack/react-router";
-import { Linkedin, Instagram, Twitter, Dribbble } from "lucide-react";
+import { 
+  ArrowUpRight,
+  Send,
+  Globe,
+  Camera,
+  MessageCircle,
+  LucideIcon
+} from "lucide-react";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 import { services } from "@/lib/services-data";
+
+// Fallbacks for missing icons
+const Twitter = Globe;
+const Instagram = Camera;
+const Linkedin = Globe;
+const Dribbble = Globe;
 
 const socials = [
   { href: "https://www.linkedin.com", label: "LinkedIn", Icon: Linkedin },
