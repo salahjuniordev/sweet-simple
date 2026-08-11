@@ -27,6 +27,8 @@ import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as WorkIndexRouteImport } from './routes/work.index'
 import { Route as WorkSlugRouteImport } from './routes/work.$slug'
+import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
+import { Route as AdminAdminRolesRouteImport } from './routes/_admin/admin.roles'
 import { Route as AdminAdminServicesRouteImport } from './routes/_admin/admin.services'
 import { Route as ApiPublicSitemapXmlRouteImport } from './routes/api/public/sitemap.xml'
 
@@ -119,6 +121,16 @@ const WorkSlugRoute = WorkSlugRouteImport.update({
   path: '/work/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAdminBlogRoute = AdminAdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminRolesRoute = AdminAdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
 const AdminAdminServicesRoute = AdminAdminServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -148,6 +160,8 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/admin/blog': typeof AdminAdminBlogRoute
+  '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
@@ -169,6 +183,8 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/services': typeof ServicesIndexRoute
   '/work': typeof WorkIndexRoute
+  '/admin/blog': typeof AdminAdminBlogRoute
+  '/admin/roles': typeof AdminAdminRolesRoute
   '/admin/services': typeof AdminAdminServicesRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
@@ -192,6 +208,8 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/services/': typeof ServicesIndexRoute
   '/work/': typeof WorkIndexRoute
+  '/_admin/admin/blog': typeof AdminAdminBlogRoute
+  '/_admin/admin/roles': typeof AdminAdminRolesRoute
   '/_admin/admin/services': typeof AdminAdminServicesRoute
   '/api/public/sitemap/xml': typeof ApiPublicSitemapXmlRoute
 }
@@ -215,6 +233,8 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/services/'
     | '/work/'
+    | '/admin/blog'
+    | '/admin/roles'
     | '/admin/services'
     | '/api/public/sitemap/xml'
   fileRoutesByTo: FileRoutesByTo
@@ -236,6 +256,8 @@ export interface FileRouteTypes {
     | '/blog'
     | '/services'
     | '/work'
+    | '/admin/blog'
+    | '/admin/roles'
     | '/admin/services'
     | '/api/public/sitemap/xml'
   id:
@@ -258,6 +280,8 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/services/'
     | '/work/'
+    | '/_admin/admin/blog'
+    | '/_admin/admin/roles'
     | '/_admin/admin/services'
     | '/api/public/sitemap/xml'
   fileRoutesById: FileRoutesById
@@ -411,6 +435,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/admin/blog': {
+      id: '/_admin/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminAdminBlogRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/roles': {
+      id: '/_admin/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminAdminRolesRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
     '/_admin/admin/services': {
       id: '/_admin/admin/services'
       path: '/services'
@@ -429,10 +467,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminAdminRouteChildren {
+  AdminAdminBlogRoute: typeof AdminAdminBlogRoute
+  AdminAdminRolesRoute: typeof AdminAdminRolesRoute
   AdminAdminServicesRoute: typeof AdminAdminServicesRoute
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
+  AdminAdminBlogRoute: AdminAdminBlogRoute,
+  AdminAdminRolesRoute: AdminAdminRolesRoute,
   AdminAdminServicesRoute: AdminAdminServicesRoute,
 }
 

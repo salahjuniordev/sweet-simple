@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getServices } from "@/lib/cms-queries";
 import { serviceIcons } from "@/lib/service-icons";
@@ -29,10 +30,23 @@ export const Route = createFileRoute("/services/")({
 });
 
 function ServicesIndex() {
+  const [search, setSearch] = useState("");
+  
   const { data: services, isLoading } = useQuery({
     queryKey: ["services"],
     queryFn: getServices,
   });
+
+  const visible = useMemo(() => {
+    if (!services) return [];
+    if (!search) return services;
+    const s = search.toLowerCase();
+    return services.filter(ser => 
+      ser.title.toLowerCase().includes(s) || 
+      ser.desc_short.toLowerCase().includes(s) ||
+      (ser.benefits as string[])?.some(b => b.toLowerCase().includes(s))
+    );
+  }, [services, search]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -51,13 +65,27 @@ function ServicesIndex() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-20">
-        <h1 className="max-w-3xl text-5xl font-black tracking-tight md:text-6xl">
-          Services &amp; <span className="text-brand">pricing</span>
-        </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-          Nine disciplines, each with clear packages. Pick a service to see what's included and
-          what it costs.
-        </p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <h1 className="max-w-3xl text-5xl font-black tracking-tight md:text-6xl">
+              Services &amp; <span className="text-brand">pricing</span>
+            </h1>
+            <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+              Nine disciplines, each with clear packages. Pick a service to see what's included and
+              what it costs.
+            </p>
+          </div>
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input 
+              type="text"
+              placeholder="Search services..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-xl text-sm focus:outline-none focus:border-brand"
+            />
+          </div>
+        </div>
 
         {isLoading ? (
           <div className="mt-20 flex justify-center">
@@ -65,7 +93,7 @@ function ServicesIndex() {
           </div>
         ) : (
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services?.map((s) => {
+            {visible?.map((s) => {
               const Icon = serviceIcons[s.icon as keyof typeof serviceIcons];
               return (
                 <Link
@@ -88,6 +116,11 @@ function ServicesIndex() {
                 </Link>
               );
             })}
+            {visible?.length === 0 && (
+              <div className="col-span-full py-20 text-center text-muted-foreground">
+                No services match your search. Try a different keyword.
+              </div>
+            )}
           </div>
         )}
       </main>

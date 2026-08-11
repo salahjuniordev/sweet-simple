@@ -52,6 +52,7 @@ function AdminLayout() {
             <AdminNavLink to="/admin/services" label="Services" />
             <AdminNavLink to="/admin/blog" label="Blog Posts" />
             <AdminNavLink to="/admin/work" label="Case Studies" />
+            <AdminNavLink to="/admin/roles" label="Roles & Permissions" />
           </nav>
         </aside>
 
