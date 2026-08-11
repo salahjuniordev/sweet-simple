@@ -2,14 +2,20 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getPost, posts, formatPostDate, type Post } from "@/lib/blog-data";
+import { formatPostDate } from "@/lib/blog-data";
 import { getAuthor } from "@/lib/authors";
+import { getPostBySlug, getPosts } from "@/lib/cms-queries";
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
-    if (!post) throw notFound();
-    return { post };
+  loader: async ({ params }) => {
+    try {
+      const post = await getPostBySlug(params.slug);
+      if (!post) throw notFound();
+      return { post };
+    } catch (e) {
+      throw notFound();
+    }
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -68,7 +74,6 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-
 function PostNotFound() {
   return (
     <Shell>
@@ -87,12 +92,20 @@ function PostNotFound() {
 }
 
 function BlogPost() {
-  const { post } = Route.useLoaderData() as { post: Post };
+  const { post } = Route.useLoaderData() as any;
   const author = getAuthor(post.category);
-  const others = posts.filter((p) => p.slug !== post.slug);
-  const sameCategory = others.filter((p) => p.category === post.category);
-  const more = [...sameCategory, ...others.filter((p) => p.category !== post.category)].slice(0, 3);
+  
+  const { data: posts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => getPosts(),
+  });
 
+  const more = posts
+    ? posts
+        .filter((p) => p.slug !== post.slug)
+        .sort((a, b) => (a.category === post.category ? -1 : 1))
+        .slice(0, 3)
+    : [];
 
   return (
     <Shell>
@@ -103,12 +116,12 @@ function BlogPost() {
         <div className="mt-8 flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           <span className="rounded-full bg-brand-soft px-3 py-1 text-brand">{post.category}</span>
           <span>{formatPostDate(post.date)}</span>
-          <span>{post.readTime}</span>
+          <span>{post.read_time}</span>
         </div>
         <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight md:text-5xl">{post.title}</h1>
         <p className="mt-5 text-lg text-muted-foreground">{post.excerpt}</p>
         <div className="mt-10 space-y-6 text-base leading-relaxed">
-          {post.body.map((p: string) => (
+          {(post.body as string[]).map((p: string) => (
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
         </div>
@@ -136,7 +149,6 @@ function BlogPost() {
             Start a project <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
-
       </article>
 
       <section className="border-t border-border">
@@ -152,7 +164,7 @@ function BlogPost() {
               >
                 <div className="text-xs font-semibold uppercase tracking-wider text-brand">{p.category}</div>
                 <h3 className="mt-3 text-lg font-bold group-hover:text-brand">{p.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{p.excerpt}</p>
+                <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{p.excerpt}</p>
               </Link>
             ))}
           </div>
