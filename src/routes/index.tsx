@@ -77,19 +77,21 @@ function Index() {
 
 
         <section className="border-b border-border bg-primary text-primary-foreground">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
-            {[
-              ["9", "Services in-house"],
-              ["120+", "Projects delivered"],
-              ["48h", "Average response"],
-              ["99.9%", "Uptime maintained"],
-            ].map(([v, l]) => (
-              <div key={l}>
-                <div className="text-4xl font-black text-brand">{v}</div>
-                <div className="mt-1 text-sm opacity-80">{l}</div>
-              </div>
-            ))}
-          </div>
+          <ScrollReveal direction="up">
+            <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 md:grid-cols-4">
+              {[
+                ["9", "Services in-house"],
+                ["120+", "Projects delivered"],
+                ["48h", "Average response"],
+                ["99.9%", "Uptime maintained"],
+              ].map(([v, l]) => (
+                <div key={l}>
+                  <div className="text-4xl font-black text-brand">{v}</div>
+                  <div className="mt-1 text-sm opacity-80">{l}</div>
+                </div>
+              ))}
+            </div>
+          </ScrollReveal>
         </section>
 
         <section className="border-b border-border">
@@ -112,34 +114,37 @@ function Index() {
 
 
         <section id="services" className="mx-auto max-w-6xl px-6 py-24">
-          <h2 className="max-w-2xl text-4xl font-black tracking-tight md:text-5xl">
-            Everything your brand needs, <span className="text-brand">under one roof</span>
-          </h2>
-          <p className="mt-4 max-w-xl text-muted-foreground">
-            Nine disciplines that work together — so strategy, design and code never contradict each other.
-          </p>
+          <ScrollReveal direction="up">
+            <h2 className="max-w-2xl text-4xl font-black tracking-tight md:text-5xl">
+              Everything your brand needs, <span className="text-brand">under one roof</span>
+            </h2>
+            <p className="mt-4 max-w-xl text-muted-foreground">
+              Nine disciplines that work together — so strategy, design and code never contradict each other.
+            </p>
+          </ScrollReveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s) => {
+            {services.map((s, idx) => {
               const Icon = serviceIcons[s.icon];
               return (
-                <Link
-                  key={s.slug}
-                  to="/services/$slug"
-                  params={{ slug: s.slug }}
-                  className="group rounded-2xl border border-border bg-card p-7 transition-colors hover:border-brand"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand-foreground transition-colors group-hover:bg-brand">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mt-5 flex items-center gap-1 text-lg font-bold">
-                    {s.title}
-                    <ArrowUpRight className="h-4 w-4 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-                  <p className="mt-4 text-sm font-bold">
-                    From <span className="text-brand">{s.plans[0]?.price}</span>
-                  </p>
-                </Link>
+                <ScrollReveal key={s.slug} direction="up" delay={idx * 0.1}>
+                  <Link
+                    to="/services/$slug"
+                    params={{ slug: s.slug }}
+                    className="group block rounded-2xl border border-border bg-card p-7 transition-colors hover:border-brand"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand-foreground transition-colors group-hover:bg-brand">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="mt-5 flex items-center gap-1 text-lg font-bold">
+                      {s.title}
+                      <ArrowUpRight className="h-4 w-4 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                    <p className="mt-4 text-sm font-bold">
+                      From <span className="text-brand">{s.plans[0]?.price}</span>
+                    </p>
+                  </Link>
+                </ScrollReveal>
               );
             })}
           </div>
