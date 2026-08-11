@@ -12,6 +12,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { serviceFaqs } from "@/lib/service-faqs";
 import { caseStudyForService } from "@/lib/work-data";
+import { ScrollReveal } from "@/components/scroll-reveal";
+
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
