@@ -70,7 +70,7 @@ function ServicesIndex() {
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
                 <p className="mt-4 text-sm font-bold">
-                  From <span className="text-brand">{s.plans[0].price}</span>
+                  From <span className="text-brand">{s.plans[0]?.price}</span>
                 </p>
               </Link>
             );

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { getService, services } from "@/lib/services-data";
+import { getService, services, type Service } from "@/lib/services-data";
 import { serviceIcons } from "@/lib/service-icons";
 import logo from "@/assets/mario-studio-logo.png.asset.json";
 
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/services/$slug")({
     }
     const { service } = loaderData;
     const title = `${service.title} — Mario Studio`;
-    const description = `${service.tagline}. ${service.desc} Packages from ${service.plans[0].price}.`;
+    const description = `${service.tagline}. ${service.desc} Packages from ${service.plans[0]?.price ?? "$0"}.`;
     return {
       meta: [
         { title },
@@ -48,7 +48,7 @@ function ServiceNotFound() {
 }
 
 function ServiceDetail() {
-  const { service } = Route.useLoaderData();
+  const { service } = Route.useLoaderData() as { service: Service };
   const Icon = serviceIcons[service.icon];
   const others = services.filter((s) => s.slug !== service.slug).slice(0, 4);
 
