@@ -71,7 +71,7 @@ function ServicesIndex() {
               Services &amp; <span className="text-brand">pricing</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-muted-foreground">
-              Nine disciplines, each with clear packages. Pick a service to see what's included and
+              Premium digital disciplines, each with clear packages. Pick a service to see what's included and
               what it costs.
             </p>
           </div>
