@@ -91,8 +91,12 @@ function LoginPage() {
             Google
           </Button>
         </CardContent>
-        <CardFooter className="flex justify-center text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-brand transition-colors">Back to home</Link>
+        <CardFooter className="flex flex-col gap-4 text-sm text-muted-foreground">
+          <p>
+            Don't have an account?{" "}
+            <Link to="/auth/signup" className="text-brand font-bold hover:underline">Sign up</Link>
+          </p>
+          <Link to="/" className="hover:text-brand transition-colors text-xs uppercase tracking-widest font-bold">Back to home</Link>
         </CardFooter>
       </Card>
     </div>
