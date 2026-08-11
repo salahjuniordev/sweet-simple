@@ -14,6 +14,7 @@ import { ArrowLeft, Home } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
+import { I18nProvider, useI18n } from "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -197,7 +198,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <I18nProvider>
+      <RootShellInner>{children}</RootShellInner>
+    </I18nProvider>
+  );
+}
+
+function RootShellInner({ children }: { children: ReactNode }) {
+  const { lang } = useI18n();
+
+  return (
+    <html lang={lang}>
       <head>
         <HeadContent />
       </head>
