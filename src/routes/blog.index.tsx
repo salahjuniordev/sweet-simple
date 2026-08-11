@@ -3,7 +3,9 @@ import { useMemo, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { posts, formatPostDate } from "@/lib/blog-data";
+import { formatPostDate } from "@/lib/blog-data";
+import { useQuery } from "@tanstack/react-query";
+import { getPosts } from "@/lib/cms-queries";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
@@ -29,12 +31,25 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(posts.map((p) => p.category)))],
-    [],
-  );
+  const { data: posts, isLoading } = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => getPosts(),
+  });
+
   const [active, setActive] = useState("All");
-  const visible = active === "All" ? posts : posts.filter((p) => p.category === active);
+
+  const categories = useMemo(
+    () => {
+      if (!posts) return ["All"];
+      return ["All", ...Array.from(new Set(posts.map((p) => p.category)))];
+    },
+    [posts],
+  );
+
+  const visible = useMemo(() => {
+    if (!posts) return [];
+    return active === "All" ? posts : posts.filter((p) => p.category === active);
+  }, [posts, active]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -73,30 +88,36 @@ function BlogIndex() {
             ))}
           </div>
 
-          <div className="mt-12 grid gap-8 md:grid-cols-2">
-            {visible.map((post) => (
-              <Link
-                key={post.slug}
-                to="/blog/$slug"
-                params={{ slug: post.slug }}
-                className="group flex flex-col justify-between rounded-2xl border border-border p-8 transition-colors hover:border-brand"
-              >
-                <div>
-                  <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    <span className="rounded-full bg-brand-soft px-3 py-1 text-brand">{post.category}</span>
-                    <span>{formatPostDate(post.date)}</span>
+          {isLoading ? (
+            <div className="mt-20 flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand" />
+            </div>
+          ) : (
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
+              {visible.map((post) => (
+                <Link
+                  key={post.slug}
+                  to="/blog/$slug"
+                  params={{ slug: post.slug }}
+                  className="group flex flex-col justify-between rounded-2xl border border-border p-8 transition-colors hover:border-brand"
+                >
+                  <div>
+                    <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      <span className="rounded-full bg-brand-soft px-3 py-1 text-brand">{post.category}</span>
+                      <span>{formatPostDate(post.date)}</span>
+                    </div>
+                    <h2 className="mt-5 text-2xl font-bold leading-snug group-hover:text-brand">
+                      {post.title}
+                    </h2>
+                    <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
                   </div>
-                  <h2 className="mt-5 text-2xl font-bold leading-snug group-hover:text-brand">
-                    {post.title}
-                  </h2>
-                  <p className="mt-3 text-sm text-muted-foreground">{post.excerpt}</p>
-                </div>
-                <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold">
-                  Read article <ArrowUpRight className="h-4 w-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
+                  <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold">
+                    Read article <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 

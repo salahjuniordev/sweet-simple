@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { caseStudies } from "@/lib/work-data";
+import { useQuery } from "@tanstack/react-query";
+import { getCaseStudies } from "@/lib/cms-queries";
 
 export const Route = createFileRoute("/work/")({
   head: () => ({
@@ -24,6 +25,11 @@ export const Route = createFileRoute("/work/")({
 });
 
 function WorkIndex() {
+  const { data: caseStudies, isLoading } = useQuery({
+    queryKey: ["case-studies"],
+    queryFn: getCaseStudies,
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -43,35 +49,41 @@ function WorkIndex() {
         </section>
 
         <section className="mx-auto max-w-6xl space-y-8 px-6 py-20">
-          {caseStudies.map((c) => (
-            <Link
-              key={c.slug}
-              to="/work/$slug"
-              params={{ slug: c.slug }}
-              className="group grid gap-8 rounded-3xl border border-border p-8 transition-colors hover:border-brand md:grid-cols-[1.4fr_0.6fr] md:p-10"
-            >
-              <div>
-                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  <span className="rounded-full bg-brand-soft px-3 py-1 text-brand">{c.industry}</span>
-                  <span>{c.year}</span>
-                </div>
-                <h2 className="mt-5 flex items-start gap-2 text-2xl font-bold leading-snug group-hover:text-brand md:text-3xl">
-                  {c.title}
-                  <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
-                </h2>
-                <p className="mt-3 max-w-xl text-muted-foreground">{c.summary}</p>
-                <p className="mt-5 text-sm font-semibold">{c.client} · {c.services.join(" · ")}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 self-center">
-                {c.results.slice(0, 4).map((r) => (
-                  <div key={r.label}>
-                    <div className="text-2xl font-black text-brand">{r.value}</div>
-                    <div className="text-xs text-muted-foreground">{r.label}</div>
+          {isLoading ? (
+            <div className="py-20 flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand" />
+            </div>
+          ) : (
+            caseStudies?.map((c) => (
+              <Link
+                key={c.slug}
+                to="/work/$slug"
+                params={{ slug: c.slug }}
+                className="group grid gap-8 rounded-3xl border border-border p-8 transition-colors hover:border-brand md:grid-cols-[1.4fr_0.6fr] md:p-10"
+              >
+                <div>
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <span className="rounded-full bg-brand-soft px-3 py-1 text-brand">{c.industry}</span>
+                    <span>{c.year}</span>
                   </div>
-                ))}
-              </div>
-            </Link>
-          ))}
+                  <h2 className="mt-5 flex items-start gap-2 text-2xl font-bold leading-snug group-hover:text-brand md:text-3xl">
+                    {c.title}
+                    <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
+                  </h2>
+                  <p className="mt-3 max-w-xl text-muted-foreground">{c.summary}</p>
+                  <p className="mt-5 text-sm font-semibold">{c.client} · {(c.services as string[]).join(" · ")}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4 self-center">
+                  {(c.results as any[]).slice(0, 4).map((r) => (
+                    <div key={r.label}>
+                      <div className="text-2xl font-black text-brand">{r.value}</div>
+                      <div className="text-xs text-muted-foreground">{r.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </Link>
+            ))
+          )}
         </section>
       </main>
 

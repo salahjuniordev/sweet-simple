@@ -7,18 +7,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { testimonials, faqs } from "@/lib/site-content";
-import { posts, formatPostDate } from "@/lib/blog-data";
-import logo from "@/assets/mario-studio-logo.png.asset.json";
-import { services } from "@/lib/services-data";
+import { formatPostDate } from "@/lib/blog-data";
 import { serviceIcons } from "@/lib/service-icons";
-import { caseStudies } from "@/lib/work-data";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { ScrollReveal } from "@/components/scroll-reveal";
-
-
 import { HeroSlider } from "@/components/hero-slider";
+import { useQuery } from "@tanstack/react-query";
+import { getServices, getPosts, getCaseStudies } from "@/lib/cms-queries";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,14 +64,27 @@ const steps = [
 ];
 
 function Index() {
+  const { data: services } = useQuery({
+    queryKey: ["services"],
+    queryFn: getServices,
+  });
+
+  const { data: posts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: () => getPosts(),
+  });
+
+  const { data: caseStudies } = useQuery({
+    queryKey: ["case-studies"],
+    queryFn: getCaseStudies,
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
 
-
       <main id="top">
         <HeroSlider />
-
 
         <section className="border-b border-border bg-primary text-primary-foreground">
           <ScrollReveal direction="up">
@@ -112,7 +122,6 @@ function Index() {
           </div>
         </section>
 
-
         <section id="services" className="mx-auto max-w-6xl px-6 py-24">
           <ScrollReveal direction="up">
             <h2 className="max-w-2xl text-4xl font-black tracking-tight md:text-5xl">
@@ -123,8 +132,8 @@ function Index() {
             </p>
           </ScrollReveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s, idx) => {
-              const Icon = serviceIcons[s.icon];
+            {services?.map((s, idx) => {
+              const Icon = serviceIcons[s.icon as keyof typeof serviceIcons];
               return (
                 <ScrollReveal key={s.slug} direction="up" delay={idx * 0.1}>
                   <Link
@@ -133,15 +142,15 @@ function Index() {
                     className="group block rounded-2xl border border-border bg-card p-7 transition-colors hover:border-brand"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand-foreground transition-colors group-hover:bg-brand">
-                      <Icon className="h-6 w-6" />
+                      {Icon && <Icon className="h-6 w-6" />}
                     </div>
                     <h3 className="mt-5 flex items-center gap-1 text-lg font-bold">
                       {s.title}
                       <ArrowUpRight className="h-4 w-4 text-brand opacity-0 transition-opacity group-hover:opacity-100" />
                     </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{s.desc_short}</p>
                     <p className="mt-4 text-sm font-bold">
-                      From <span className="text-brand">{s.plans[0]?.price}</span>
+                      From <span className="text-brand">{(s.plans as any)?.[0]?.price}</span>
                     </p>
                   </Link>
                 </ScrollReveal>
@@ -196,7 +205,7 @@ function Index() {
             </Link>
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {caseStudies.slice(0, 3).map((c) => (
+            {caseStudies?.slice(0, 3).map((c) => (
               <Link
                 key={c.slug}
                 to="/work/$slug"
@@ -205,9 +214,9 @@ function Index() {
               >
                 <p className="text-xs font-semibold uppercase tracking-wider text-brand">{c.industry}</p>
                 <h3 className="mt-3 text-lg font-bold leading-snug group-hover:text-brand">{c.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground">{c.summary}</p>
-                <p className="mt-5 text-2xl font-black text-brand">{c.results[0]?.value}</p>
-                <p className="text-xs text-muted-foreground">{c.results[0]?.label}</p>
+                <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{c.summary}</p>
+                <p className="mt-5 text-2xl font-black text-brand">{(c.results as any)[0]?.value}</p>
+                <p className="text-xs text-muted-foreground">{(c.results as any)[0]?.label}</p>
               </Link>
             ))}
           </div>
@@ -233,8 +242,6 @@ function Index() {
             </ul>
           </div>
         </section>
-
-
 
         <section id="testimonials" className="border-y border-border bg-brand-soft">
           <div className="mx-auto max-w-6xl px-6 py-24">
@@ -276,7 +283,7 @@ function Index() {
             </Link>
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {posts.slice(0, 3).map((post) => (
+            {posts?.slice(0, 3).map((post) => (
               <Link
                 key={post.slug}
                 to="/blog/$slug"
@@ -288,7 +295,7 @@ function Index() {
                   <span>{formatPostDate(post.date)}</span>
                 </div>
                 <h3 className="mt-4 text-lg font-bold leading-snug group-hover:text-brand">{post.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground">{post.excerpt}</p>
+                <p className="mt-3 text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
               </Link>
             ))}
           </div>
@@ -316,7 +323,6 @@ function Index() {
             </Accordion>
           </div>
         </section>
-
 
         <section id="newsletter" className="border-t border-border bg-secondary">
           <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-20 md:grid-cols-2">

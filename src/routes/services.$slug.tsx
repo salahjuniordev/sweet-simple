@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { getService, services, type Service } from "@/lib/services-data";
+import { getServiceBySlug, getServices } from "@/lib/cms-queries";
 import { serviceIcons } from "@/lib/service-icons";
 import {
   Accordion,
@@ -13,13 +13,17 @@ import { SiteFooter } from "@/components/site-footer";
 import { serviceFaqs } from "@/lib/service-faqs";
 import { caseStudyForService } from "@/lib/work-data";
 import { ScrollReveal } from "@/components/scroll-reveal";
-
+import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/services/$slug")({
-  loader: ({ params }) => {
-    const service = getService(params.slug);
-    if (!service) throw notFound();
-    return { service };
+  loader: async ({ params }) => {
+    try {
+      const service = await getServiceBySlug(params.slug);
+      if (!service) throw notFound();
+      return { service };
+    } catch (e) {
+      throw notFound();
+    }
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -29,7 +33,7 @@ export const Route = createFileRoute("/services/$slug")({
     }
     const { service } = loaderData;
     const title = `${service.title} — Digital Services | Mario Studio`;
-    const description = `${service.tagline}. ${service.desc} Expert ${service.title.toLowerCase()} starting from ${service.plans[0]?.price ?? "$0"}.`;
+    const description = `${service.tagline}. ${service.desc_short} Expert ${service.title.toLowerCase()} starting from ${(service.plans as any)?.[0]?.price ?? "$0"}.`;
     return {
       meta: [
         { title },
@@ -44,14 +48,14 @@ export const Route = createFileRoute("/services/$slug")({
             "@context": "https://schema.org",
             "@type": "Service",
             name: service.title,
-            description: service.desc,
+            description: service.desc_short,
             provider: {
               "@type": "Organization",
               name: "Mario Studio"
             },
             offers: {
               "@type": "AggregateOffer",
-              lowPrice: service.plans[0]?.price.replace(/[^0-9.]/g, '') || "0",
+              lowPrice: (service.plans as any)?.[0]?.price.replace(/[^0-9.]/g, '') || "0",
               priceCurrency: "USD"
             }
           }
@@ -77,16 +81,21 @@ function ServiceNotFound() {
 }
 
 function ServiceDetail() {
-  const { service } = Route.useLoaderData() as { service: Service };
-  const Icon = serviceIcons[service.icon];
-  const others = services.filter((s) => s.slug !== service.slug).slice(0, 4);
-  const faqItems = serviceFaqs[service.slug] ?? [];
+  const { service } = Route.useLoaderData() as any;
+  const Icon = serviceIcons[service.icon as keyof typeof serviceIcons];
+  
+  const { data: allServices } = useQuery({
+    queryKey: ["services"],
+    queryFn: getServices,
+  });
+
+  const others = allServices?.filter((s) => s.slug !== service.slug).slice(0, 4) || [];
+  const faqItems = serviceFaqs[service.slug as keyof typeof serviceFaqs] ?? [];
   const relatedCase = caseStudyForService(service.slug);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
-
 
       <main>
         <section className="relative overflow-hidden border-b border-border">
@@ -94,7 +103,7 @@ function ServiceDetail() {
           <div className="relative mx-auto max-w-6xl px-6 py-20">
             <ScrollReveal direction="left">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-brand-foreground">
-                <Icon className="h-7 w-7" />
+                {Icon && <Icon className="h-7 w-7" />}
               </div>
               <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[1] tracking-tight md:text-6xl">
                 {service.title}
@@ -116,7 +125,7 @@ function ServiceDetail() {
             <div>
               <h2 className="text-3xl font-black tracking-tight">What you get out of it</h2>
               <ul className="mt-6 space-y-4">
-                {service.benefits.map((b) => (
+                {(service.benefits as string[]).map((b) => (
                   <li key={b} className="flex gap-3">
                     <Check className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
                     <span className="text-muted-foreground">{b}</span>
@@ -127,7 +136,7 @@ function ServiceDetail() {
             <div className="rounded-2xl border border-border bg-secondary p-8">
               <h2 className="text-xl font-bold">Deliverables</h2>
               <ul className="mt-5 space-y-3">
-                {service.deliverables.map((d) => (
+                {(service.deliverables as string[]).map((d) => (
                   <li key={d} className="flex items-center gap-3 border-b border-border pb-3 text-sm last:border-0 last:pb-0">
                     <span className="h-2 w-2 shrink-0 rounded-full bg-brand" />
                     {d}
@@ -145,7 +154,7 @@ function ServiceDetail() {
               Fixed scopes, no surprise invoices. Anything outside a package is quoted up front.
             </p>
             <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {service.plans.map((p, idx) => (
+              {(service.plans as any[]).map((p, idx) => (
                 <ScrollReveal key={p.name} direction="up" delay={idx * 0.1}>
                   <div
                     className={`flex flex-col h-full rounded-2xl border bg-card p-8 ${
@@ -163,7 +172,7 @@ function ServiceDetail() {
                       <span className="text-sm text-muted-foreground">{p.note}</span>
                     </div>
                     <ul className="mt-6 flex-1 space-y-3 text-sm">
-                      {p.features.map((f) => (
+                      {p.features.map((f: string) => (
                         <li key={f} className="flex gap-2">
                           <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                           {f}
@@ -222,7 +231,7 @@ function ServiceDetail() {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4 self-center">
-                  {relatedCase.results.slice(0, 4).map((r) => (
+                  {(relatedCase.results as any[]).slice(0, 4).map((r) => (
                     <div key={r.label}>
                       <div className="text-2xl font-black text-brand">{r.value}</div>
                       <div className="text-xs text-muted-foreground">{r.label}</div>
@@ -252,7 +261,6 @@ function ServiceDetail() {
           </div>
         </section>
 
-
         <section className="mx-auto max-w-6xl px-6 py-20">
           <h2 className="text-2xl font-black tracking-tight">Other services</h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -264,7 +272,7 @@ function ServiceDetail() {
                 className="rounded-xl border border-border p-5 transition-colors hover:border-brand"
               >
                 <h3 className="font-bold">{s.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
+                <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{s.desc_short}</p>
               </Link>
             ))}
           </div>
@@ -272,7 +280,6 @@ function ServiceDetail() {
       </main>
 
       <SiteFooter />
-
     </div>
   );
 }

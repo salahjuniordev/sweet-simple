@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { services } from "../../../lib/services-data";
-import { posts } from "../../../lib/blog-data";
-import { caseStudies } from "../../../lib/work-data";
+import { createClient } from "@supabase/supabase-js";
 
 const BASE_URL = "https://mariostudio.com";
 
@@ -9,6 +7,11 @@ export const Route = createFileRoute("/api/public/sitemap/xml")({
   server: {
     handlers: {
       GET: async () => {
+        const supabase = createClient(
+          process.env["VITE_SUPABASE_URL"]!,
+          process.env["VITE_SUPABASE_PUBLISHABLE_KEY"]!
+        );
+
         const staticRoutes = [
           "/",
           "/about",
@@ -22,9 +25,19 @@ export const Route = createFileRoute("/api/public/sitemap/xml")({
           "/terms",
         ];
 
-        const serviceRoutes = services.map((s) => `/services/${s.slug}`);
-        const blogRoutes = posts.map((p) => `/blog/${p.slug}`);
-        const workRoutes = caseStudies.map((c) => `/work/${c.slug}`);
+        const [
+          { data: services },
+          { data: posts },
+          { data: caseStudies }
+        ] = await Promise.all([
+          supabase.from("cms_services").select("slug"),
+          supabase.from("cms_posts").select("slug"),
+          supabase.from("cms_case_studies").select("slug"),
+        ]);
+
+        const serviceRoutes = services?.map((s) => `/services/${s.slug}`) || [];
+        const blogRoutes = posts?.map((p) => `/blog/${p.slug}`) || [];
+        const workRoutes = caseStudies?.map((c) => `/work/${c.slug}`) || [];
 
         const allRoutes = [...staticRoutes, ...serviceRoutes, ...blogRoutes, ...workRoutes];
 
