@@ -71,7 +71,7 @@ function AdminLeads() {
             {leads?.map((lead) => (
               <TableRow key={lead.id}>
                 <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
-                  {new Date(lead.created_at).toLocaleDateString()}
+                  {lead.created_at ? new Date(lead.created_at).toLocaleDateString() : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <div className="font-bold">{lead.name}</div>
