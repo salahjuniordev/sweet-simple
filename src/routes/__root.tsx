@@ -8,6 +8,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Home } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -15,21 +17,70 @@ import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-1/4 -left-20 h-[500px] w-[500px] rounded-full bg-brand/10 blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-20 h-[500px] w-[500px] rounded-full bg-brand/5 blur-[120px]" />
+      
+      <div className="relative z-10 w-full max-w-2xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="inline-block rounded-full bg-brand/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-brand ring-1 ring-brand/20">
+            Error 404
+          </span>
+          
+          <h1 className="mt-8 text-8xl font-black tracking-tighter text-foreground sm:text-[12rem]">
+            LOST<span className="text-brand">.</span>
+          </h1>
+          
+          <h2 className="mt-4 text-2xl font-bold text-foreground sm:text-4xl">
+            You've ventured into the void.
+          </h2>
+          
+          <p className="mx-auto mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
+            The page you're looking for has either drifted into another dimension or never existed in this one.
+          </p>
+          
+          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              to="/"
+              className="group flex w-full items-center justify-center gap-2 rounded-full bg-brand px-8 py-4 text-sm font-bold text-brand-foreground transition-all hover:scale-105 active:scale-95 sm:w-auto"
+            >
+              <Home className="h-4 w-4" />
+              Back to Base
+            </Link>
+            <button
+              onClick={() => window.history.back()}
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background/50 px-8 py-4 text-sm font-bold text-foreground backdrop-blur-sm transition-all hover:bg-secondary sm:w-auto"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Go Back
+            </button>
+          </div>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="mt-20 flex justify-center gap-8 border-t border-border/50 pt-10"
+        >
+          <div className="text-left">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Studio</p>
+            <Link to="/about" className="mt-1 block text-sm font-medium hover:text-brand transition-colors">About Us</Link>
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Support</p>
+            <Link to="/faq" className="mt-1 block text-sm font-medium hover:text-brand transition-colors">Help Center</Link>
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Contact</p>
+            <Link to="/contact" className="mt-1 block text-sm font-medium hover:text-brand transition-colors">Get in Touch</Link>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
