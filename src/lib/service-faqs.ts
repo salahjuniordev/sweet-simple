@@ -44,4 +44,28 @@ export const serviceFaqs: Record<string, { q: string; a: string }[]> = {
     { q: "How is performance reported?", a: "A monthly report on conversions, cost per acquisition and pipeline — not impressions." },
     { q: "Is there a minimum commitment?", a: "Three months, because acquisition data before that is mostly noise." },
   ],
+  "motion-design": [
+    { q: "What format do I receive?", a: "We deliver 4K video, Lottie files for web, and transparent GIFs/MOV files for social." },
+    { q: "Can you animate my existing logo?", a: "Yes, we just need the vector files (SVG/AI)." },
+  ],
+  "ecommerce-strategy": [
+    { q: "Which platforms do you support?", a: "Shopify, WooCommerce, and custom headless commerce stacks." },
+    { q: "How do you measure success?", a: "By tracking conversion rate lift and average order value (AOV)." },
+  ],
+  "ai-automation": [
+    { q: "Is my data safe with AI?", a: "Yes, we use secure APIs and never train public models on your private data." },
+    { q: "What tools do you use?", a: "Zapier, Make, OpenAI, and custom Python scripts for heavy automation." },
+  ],
+  "sem-paid-social": [
+    { q: "Do you handle the ad creative?", a: "Yes, our design team produces the banners and video ads in-house." },
+    { q: "What platforms do you manage?", a: "Google Search/Display, Meta (Facebook/Instagram), and LinkedIn Ads." },
+  ],
+  "content-strategy": [
+    { q: "Do you handle SEO?", a: "Every piece we write is optimized for search based on keyword research." },
+    { q: "Can you write for technical niches?", a: "Yes, we interview your subject matter experts to ensure accuracy." },
+  ],
+  "saas-product-strategy": [
+    { q: "Do you write the product specs?", a: "Yes, we produce PRDs and scoped roadmap documents for your dev team." },
+    { q: "Can you help with investor decks?", a: "We design and strategize decks to align with your product roadmap." },
+  ],
 };
