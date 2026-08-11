@@ -19,6 +19,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
+import { Route as AuthBootstrapRouteImport } from './routes/auth/bootstrap'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -81,6 +82,11 @@ const AdminAdminRoute = AdminAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const AuthBootstrapRoute = AuthBootstrapRouteImport.update({
+  id: '/auth/bootstrap',
+  path: '/auth/bootstrap',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
@@ -158,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/thank-you': typeof ThankYouRoute
   '/admin': typeof AdminAdminRouteWithChildren
+  '/auth/bootstrap': typeof AuthBootstrapRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/thank-you': typeof ThankYouRoute
   '/admin': typeof AdminAdminRouteWithChildren
+  '/auth/bootstrap': typeof AuthBootstrapRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -208,6 +216,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/thank-you': typeof ThankYouRoute
   '/_admin/admin': typeof AdminAdminRouteWithChildren
+  '/auth/bootstrap': typeof AuthBootstrapRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/login': typeof AuthLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/thank-you'
     | '/admin'
+    | '/auth/bootstrap'
     | '/auth/callback'
     | '/auth/login'
     | '/blog/$slug'
@@ -258,6 +268,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/thank-you'
     | '/admin'
+    | '/auth/bootstrap'
     | '/auth/callback'
     | '/auth/login'
     | '/blog/$slug'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/thank-you'
     | '/_admin/admin'
+    | '/auth/bootstrap'
     | '/auth/callback'
     | '/auth/login'
     | '/blog/$slug'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
   ThankYouRoute: typeof ThankYouRoute
+  AuthBootstrapRoute: typeof AuthBootstrapRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthLoginRoute: typeof AuthLoginRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -390,6 +403,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AdminAdminRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/auth/bootstrap': {
+      id: '/auth/bootstrap'
+      path: '/auth/bootstrap'
+      fullPath: '/auth/bootstrap'
+      preLoaderRoute: typeof AuthBootstrapRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
       id: '/auth/callback'
@@ -525,6 +545,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
   ThankYouRoute: ThankYouRoute,
+  AuthBootstrapRoute: AuthBootstrapRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthLoginRoute: AuthLoginRoute,
   BlogSlugRoute: BlogSlugRoute,
@@ -538,3 +559,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
