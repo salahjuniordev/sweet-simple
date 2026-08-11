@@ -158,6 +158,39 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_submissions: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          service_slug: string
+          status: string | null
+          tier: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          service_slug: string
+          status?: string | null
+          tier: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          service_slug?: string
+          status?: string | null
+          tier?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string

@@ -11,15 +11,17 @@ function AdminDashboard() {
   const { data: stats } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const [services, posts, caseStudies] = await Promise.all([
+      const [services, posts, caseStudies, leads] = await Promise.all([
         supabase.from("cms_services").select("id", { count: "exact" }),
         supabase.from("cms_posts").select("id", { count: "exact" }),
         supabase.from("cms_case_studies").select("id", { count: "exact" }),
+        supabase.from("lead_submissions").select("id", { count: "exact" }),
       ]);
       return {
         services: services.count || 0,
         posts: posts.count || 0,
         caseStudies: caseStudies.count || 0,
+        leads: leads.count || 0,
       };
     },
   });
@@ -31,8 +33,9 @@ function AdminDashboard() {
         <p className="text-muted-foreground mt-2">Welcome to your studio control center.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-4">
         <StatsCard title="Services" value={stats?.services || 0} link="/admin/services" />
+        <StatsCard title="Inquiries" value={stats?.leads || 0} link="/admin/leads" />
         <StatsCard title="Blog Posts" value={stats?.posts || 0} link="/admin/blog" />
         <StatsCard title="Case Studies" value={stats?.caseStudies || 0} link="/admin/work" />
       </div>
