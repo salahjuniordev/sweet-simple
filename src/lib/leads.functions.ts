@@ -15,8 +15,7 @@ export const submitLead = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     
     // Fetch notification settings
-    const { data: settings } = await supabaseAdmin
-      .from("notification_settings")
+    const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
       .select("value")
       .eq("key", "lead_notifications")
       .maybeSingle();
@@ -43,8 +42,8 @@ export const submitLead = createServerFn({ method: "POST" })
 export const getNotificationSettings = createServerFn({ method: "GET" })
   .handler(async () => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data } = await supabaseAdmin
-      .from("notification_settings")
+    const { data } = await (supabaseAdmin
+      .from("notification_settings" as any) as any)
       .select("*")
       .eq("key", "lead_notifications")
       .maybeSingle();
@@ -59,8 +58,8 @@ export const updateNotificationSettings = createServerFn({ method: "POST" })
   }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { error } = await supabaseAdmin
-      .from("notification_settings")
+    const { error } = await (supabaseAdmin
+      .from("notification_settings" as any) as any)
       .upsert({ key: "lead_notifications", value: data });
     if (error) throw error;
     return { success: true };

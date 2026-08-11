@@ -177,7 +177,7 @@ function AdminAnalytics() {
           <p className="text-muted-foreground mt-2">Visualize your studio's performance and inquiries.</p>
         </div>
         <div className="flex gap-2">
-          <NotificationSettings settings={settings?.value as any} onSave={(v) => updateSettingsMutation.mutate({ data: v })} />
+          <NotificationSettings settings={(settings as any)?.value} onSave={(v) => updateSettingsMutation.mutate({ data: v })} />
           <Button onClick={handleExport} className="bg-brand text-brand-foreground font-bold">
             <Download className="mr-2 h-4 w-4" /> Export CSV
           </Button>
