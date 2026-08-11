@@ -198,7 +198,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <I18nProvider>
+      <RootShellInner>{children}</RootShellInner>
+    </I18nProvider>
+  );
+}
+
+function RootShellInner({ children }: { children: ReactNode }) {
+  const { lang } = useI18n();
+
+  return (
+    <html lang={lang}>
       <head>
         <HeadContent />
       </head>
