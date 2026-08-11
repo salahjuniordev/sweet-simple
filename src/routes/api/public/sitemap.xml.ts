@@ -8,8 +8,8 @@ export const Route = createFileRoute("/api/public/sitemap/xml")({
     handlers: {
       GET: async () => {
         const supabase = createClient(
-          process.env.VITE_SUPABASE_URL!,
-          process.env.VITE_SUPABASE_PUBLISHABLE_KEY!
+          process.env["VITE_SUPABASE_URL"]!,
+          process.env["VITE_SUPABASE_PUBLISHABLE_KEY"]!
         );
 
         const staticRoutes = [
