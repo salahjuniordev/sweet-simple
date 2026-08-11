@@ -50,21 +50,19 @@ export function LeadCaptureForm({ serviceSlug, tier }: LeadCaptureFormProps) {
         message: values.message,
         service_slug: serviceSlug,
         tier: tier,
-        source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
-      } as any);
+      });
 
       if (error) throw error;
 
       // Trigger simulated notifications
       try {
-        await (submitLead as any)({
+        await submitLead({
           data: {
             name: values.name,
             email: values.email,
             message: values.message,
             service_slug: serviceSlug,
             tier: tier,
-            source: typeof window !== 'undefined' ? window.location.pathname : 'direct',
           }
         });
       } catch (e) {

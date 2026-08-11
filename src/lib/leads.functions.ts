@@ -9,7 +9,6 @@ export const submitLead = createServerFn({ method: "POST" })
       message: z.string(),
       service_slug: z.string(),
       tier: z.string(),
-      source: z.string().optional(),
     }).parse(data)
   )
   .handler(async ({ data }) => {
@@ -19,7 +18,7 @@ export const submitLead = createServerFn({ method: "POST" })
     const { data: settings } = await (supabaseAdmin.from("notification_settings" as any) as any)
       .select("value")
       .eq("key", "lead_notifications")
-      .single();
+      .maybeSingle();
 
     const config = (settings?.value as any) || {
       team_emails: ["hello@mariostudio.com"],
@@ -47,7 +46,7 @@ export const getNotificationSettings = createServerFn({ method: "GET" })
       .from("notification_settings" as any) as any)
       .select("*")
       .eq("key", "lead_notifications")
-      .single();
+      .maybeSingle();
     return data;
   });
 
@@ -70,7 +69,6 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
   .inputValidator((data) => z.object({
     service: z.string().optional(),
     tier: z.string().optional(),
-    source: z.string().optional(),
     startDate: z.string().optional(),
     endDate: z.string().optional()
   }).optional().parse(data))
@@ -80,7 +78,6 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
 
     if (data?.service) query = query.eq("service_slug", data.service);
     if (data?.tier) query = query.eq("tier", data.tier);
-    if (data?.source) query = (query as any).eq("source", data.source);
     if (data?.startDate) query = query.gte("created_at", data.startDate);
     if (data?.endDate) query = query.lte("created_at", data.endDate);
 
@@ -88,14 +85,13 @@ export const exportLeadsCsv = createServerFn({ method: "POST" })
     
     if (!leads || leads.length === 0) return { csv: "No data" };
 
-    const headers = ["Date", "Name", "Email", "Service", "Tier", "Source", "Status"];
+    const headers = ["Date", "Name", "Email", "Service", "Tier", "Status"];
     const rows = leads.map(l => [
       l.created_at,
       l.name,
       l.email,
       l.service_slug,
       l.tier,
-      (l as any).source || "direct",
       l.status
     ].join(","));
 
