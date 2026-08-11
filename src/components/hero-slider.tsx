@@ -156,33 +156,43 @@ export function HeroSlider() {
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-6 md:left-6 md:translate-x-0">
-        <div className="flex gap-2">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => emblaApi?.scrollTo(i)}
-              className={`h-1.5 transition-all ${
-                selectedIndex === i ? "w-8 bg-brand" : "w-2 bg-muted hover:bg-muted-foreground"
-              } rounded-full`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
+      <div className="absolute bottom-12 left-6 right-6 flex justify-between items-end">
+        <div className="flex flex-col gap-6">
+          <div className="flex gap-4">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => emblaApi?.scrollTo(i)}
+                className="group relative py-2"
+                aria-label={`Go to slide ${i + 1}`}
+              >
+                <span className={`block h-0.5 transition-all duration-500 ${
+                  selectedIndex === i ? "w-12 bg-brand" : "w-6 bg-muted group-hover:bg-muted-foreground"
+                }`} />
+                <span className={`absolute -top-4 left-0 text-[10px] font-bold tracking-tighter transition-opacity duration-500 ${
+                  selectedIndex === i ? "opacity-100" : "opacity-0"
+                }`}>
+                  0{i + 1}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="hidden md:flex gap-2">
+
+        <div className="flex gap-4">
           <button
             onClick={scrollPrev}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background transition-colors hover:border-brand hover:text-brand"
+            className="group flex h-14 w-14 items-center justify-center rounded-full border border-border bg-background/50 backdrop-blur-sm transition-all hover:bg-brand hover:border-brand hover:text-brand-foreground"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-6 w-6 transition-transform group-hover:-translate-x-1" />
           </button>
           <button
             onClick={scrollNext}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background transition-colors hover:border-brand hover:text-brand"
+            className="group flex h-14 w-14 items-center justify-center rounded-full border border-border bg-background/50 backdrop-blur-sm transition-all hover:bg-brand hover:border-brand hover:text-brand-foreground"
             aria-label="Next slide"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
       </div>
