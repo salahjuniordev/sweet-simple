@@ -31,8 +31,9 @@ function AdminDashboard() {
         <p className="text-muted-foreground mt-2">Welcome to your studio control center.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-4">
         <StatsCard title="Services" value={stats?.services || 0} link="/admin/services" />
+        <StatsCard title="Inquiries" value={0} link="/admin/leads" />
         <StatsCard title="Blog Posts" value={stats?.posts || 0} link="/admin/blog" />
         <StatsCard title="Case Studies" value={stats?.caseStudies || 0} link="/admin/work" />
       </div>
