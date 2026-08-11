@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { translations, type Language } from "./translations";
+import { translations, type Language, type Translations } from "./translations";
 
 const STORAGE_KEY = "mario-studio-language";
 const DEFAULT_LANG: Language = "en";
@@ -8,7 +8,7 @@ type I18nContextValue = {
   lang: Language;
   setLang: (lang: Language) => void;
   toggleLang: () => void;
-  t: typeof translations.en;
+  t: Translations[Language];
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
@@ -39,7 +39,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     lang,
     setLang,
     toggleLang,
-    t: translations[lang],
+    t: translations[lang] as Translations[Language],
   };
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
